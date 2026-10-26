@@ -29,3 +29,9 @@ button:disabled{opacity:.55;cursor:not-allowed}
 @media(hover:none){.class-card:hover,.tool-card-button:hover,.learning-panel:hover{transform:none}}
 @media(prefers-contrast:more){:root{--muted:#4d5c52;--line:#c7d0c5}.section-sub,.modal-intro{color:#4d5c52}}
 @media(max-width:380px){.hero h1{font-size:clamp(36px,11vw,48px)}.section-head{gap:14px}.filter-chip{padding:8px 10px;font-size:10px}.top-actions .pill-btn{padding:10px 12px}}
+
+/* Portable study-data backup controls */
+.learning-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.import-backup{position:relative;overflow:hidden;cursor:pointer}
+.import-backup input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+@media(max-width:600px){.learning-actions{justify-content:flex-start;width:100%}.learning-actions .pill-btn{font-size:11px;padding:9px 11px}}
