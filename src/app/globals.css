@@ -20,3 +20,12 @@
 @media(max-width:900px){.learning-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.focus-panel{grid-column:1/-1}}
 @media(max-width:640px){.learning-grid{grid-template-columns:1fr;gap:10px}.learning-panel{padding:17px;border-radius:17px}.focus-panel{grid-column:auto}.modal-backdrop{padding:10px;align-items:flex-end}.tool-modal{max-height:91vh;border-radius:22px}.modal-header{padding:20px 19px 15px}.modal-header h2{font-size:22px}.modal-content{padding:17px 19px 21px}.add-task-form{flex-direction:column}.add-task-form .pill-btn{justify-content:center}.timer-ring{width:205px;height:205px}.timer-ring strong{font-size:42px}.topic-result{align-items:flex-start}.topic-add{max-width:70px;white-space:normal}.progress-caption{font-size:10px}}
 @media(prefers-reduced-motion:reduce){.tool-modal{animation:none}}
+
+/* Product-quality accessibility and touch refinements */
+:where(a,button,input,select,textarea,[tabindex]):focus-visible{outline:3px solid #438b68;outline-offset:3px}
+::selection{background:#d5eadb;color:#173b2a}
+button,a{-webkit-tap-highlight-color:transparent}
+button:disabled{opacity:.55;cursor:not-allowed}
+@media(hover:none){.class-card:hover,.tool-card-button:hover,.learning-panel:hover{transform:none}}
+@media(prefers-contrast:more){:root{--muted:#4d5c52;--line:#c7d0c5}.section-sub,.modal-intro{color:#4d5c52}}
+@media(max-width:380px){.hero h1{font-size:clamp(36px,11vw,48px)}.section-head{gap:14px}.filter-chip{padding:8px 10px;font-size:10px}.top-actions .pill-btn{padding:10px 12px}}
