@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ArrowRight, BookOpen, Brain, Calculator, Check, CheckCircle2, ChevronRight, Clock3, Compass, FlaskConical, Globe2, GraduationCap, Languages, Leaf, Menu, NotebookPen, Pause, Play, Plus, RotateCcw, Search, ShieldCheck, Sparkles, Target, Timer, X, Zap } from "lucide-react";
+import { ArrowRight, BookOpen, Brain, Calculator, Check, CheckCircle2, ChevronRight, Clock3, Compass, Download, FlaskConical, Globe2, GraduationCap, Languages, Leaf, Menu, NotebookPen, Pause, Play, Plus, RotateCcw, Search, ShieldCheck, Sparkles, Target, Timer, Upload, X, Zap } from "lucide-react";
 
 type SchoolClass = { id:string; title:string; phase:string; detail:string; icon:string };
 type StudyTask = { id:string; title:string; classId:string; date:string; done:boolean };
@@ -51,6 +51,24 @@ export default function Home(){
  function handleTool(action:"planner"|"revision"|"focus"|"topics"){setTool(action);setMenuOpen(false);if(action==="focus"&&focusSeconds===0)setFocusSeconds(25*60);}
  function toggleRevision(topic:string){setRevised(prev=>{const current=prev[selected]??[];return {...prev,[selected]:current.includes(topic)?current.filter(x=>x!==topic):[...current,topic]};});}
  function resetFocus(){setFocusRunning(false);setFocusSeconds(25*60);}
+ function exportStudyData(){
+  const backup={format:"kerala-learning-hub-backup",version:1,exportedAt:new Date().toISOString(),selectedClass:selected,tasks,revised,focusMinutes};
+  const blob=new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);const link=document.createElement("a");link.href=url;link.download="kerala-learning-hub-study-backup.json";document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);notify("Study backup exported.");
+ }
+ function importStudyData(event:React.ChangeEvent<HTMLInputElement>){
+  const file=event.target.files?.[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{try{
+   const data=JSON.parse(String(reader.result)) as {format?:string;version?:number;selectedClass?:string;tasks?:unknown;revised?:unknown;focusMinutes?:unknown};
+   if(data.format!=="kerala-learning-hub-backup"||data.version!==1||!Array.isArray(data.tasks)||!data.revised||typeof data.revised!=="object"||typeof data.focusMinutes!=="number"||!Number.isFinite(data.focusMinutes)||data.focusMinutes<0){notify("That file is not a valid study backup.");return;}
+   const validTasks=data.tasks.every((t)=>!!t&&typeof t==="object"&&typeof (t as StudyTask).id==="string"&&typeof (t as StudyTask).title==="string"&&typeof (t as StudyTask).classId==="string"&&typeof (t as StudyTask).done==="boolean");
+   const validRevision=Object.values(data.revised as Record<string,unknown>).every(v=>Array.isArray(v)&&v.every(x=>typeof x==="string"));
+   if(!validTasks||!validRevision){notify("Backup data is invalid or incomplete.");return;}
+   setTasks(data.tasks as StudyTask[]);setRevised(data.revised as Record<string,string[]>);setFocusMinutes(Math.floor(data.focusMinutes));if(typeof data.selectedClass==="string"&&classes.some(c=>c.id===data.selectedClass))setSelected(data.selectedClass);notify("Study backup restored on this device.");
+  }catch{notify("Could not read this backup file.");}finally{event.target.value="";}};
+  reader.onerror=()=>{notify("Could not read this backup file.");event.target.value="";};reader.readAsText(file);
+ }
  const timerLabel=`${String(Math.floor(focusSeconds/60)).padStart(2,"0")}:${String(focusSeconds%60).padStart(2,"0")}`;
  return <main className="app-shell">
   <header className="topbar"><a className="brand" href="#" aria-label="Kerala Learning Hub home"><span className="brand-mark"><GraduationCap size={21}/></span><span>Kerala <span style={{color:"var(--green)"}}>Learning Hub</span></span></a>
@@ -65,7 +83,7 @@ export default function Home(){
    <div className="filter-row" role="group" aria-label="Filter by school level">{filters.map(f=><button key={f} className={`filter-chip ${filter===f?"active":""}`} onClick={()=>setFilter(f)}>{f}</button>)}</div>
    <div className="class-grid">{filtered.length?filtered.map(c=><button key={c.id} className={`class-card ${selected===c.id?"selected":""}`} onClick={()=>{setSelected(c.id);notify(`${c.title} selected. Your study tools will use this class.`)}} aria-pressed={selected===c.id}><div className="card-top"><span className="class-number">{c.title}</span><span className="class-bubble">{c.icon}</span></div><p>{c.detail}</p><div className="card-bottom"><span>{c.phase}</span><strong>{selected===c.id?"Selected":"Choose"} <ArrowRight size={12} style={{verticalAlign:"middle"}}/></strong></div></button>):<div className="empty-state">No matching classes. Try another search or choose “All classes”.</div>}</div>
   </section>
-  <section className="section" id="my-learning" style={{paddingTop:0}}><div className="section-head"><div><div className="section-kicker">Your personal study space</div><h2>Make today count.</h2><p className="section-sub">Your tasks and revision checks stay saved on this device.</p></div><span className="pill-btn" style={{pointerEvents:"none"}}><GraduationCap size={15}/> {chosen.title}</span></div>
+  <section className="section" id="my-learning" style={{paddingTop:0}}><div className="section-head"><div><div className="section-kicker">Your personal study space</div><h2>Make today count.</h2><p className="section-sub">Your tasks and revision checks stay saved on this device.</p></div><div className="learning-actions"><span className="pill-btn" style={{pointerEvents:"none"}}><GraduationCap size={15}/> {chosen.title}</span><button className="pill-btn" onClick={exportStudyData}><Download size={14}/> Export backup</button><label className="pill-btn import-backup"><Upload size={14}/> Import backup<input type="file" accept="application/json,.json" aria-label="Import study backup JSON file" onChange={importStudyData}/></label></div></div>
    <div className="learning-grid"><article className="learning-panel"><div className="panel-head"><span className="panel-icon"><NotebookPen size={19}/></span><div><h3>Study planner</h3><p>Keep the next step manageable.</p></div><button className="icon-btn" aria-label="Open planner" onClick={()=>handleTool("planner")}><ArrowRight size={17}/></button></div><div className="stat-line"><strong>{classTasks.filter(t=>!t.done).length}</strong><span>tasks left for {chosen.title}</span></div><div className="progress-track"><span style={{width:`${progress}%`}}/></div><div className="progress-caption"><span>{doneTasks} of {classTasks.length} completed</span><span>{progress}% complete</span></div><button className="panel-action" onClick={()=>handleTool("planner")}>Open your planner <ChevronRight size={15}/></button></article>
     <article className="learning-panel"><div className="panel-head"><span className="panel-icon warm"><CheckCircle2 size={19}/></span><div><h3>Revision checklist</h3><p>Review topics as you go.</p></div><button className="icon-btn" aria-label="Open revision checklist" onClick={()=>handleTool("revision")}><ArrowRight size={17}/></button></div><div className="stat-line"><strong>{revisionCount}<small> / {starterTopics.length}</small></strong><span>starter revision ideas checked</span></div><div className="progress-track"><span style={{width:`${revisionCount/starterTopics.length*100}%`}}/></div><div className="progress-caption"><span>Keep it steady</span><span>{Math.round(revisionCount/starterTopics.length*100)}% checked</span></div><button className="panel-action" onClick={()=>handleTool("revision")}>Review checklist <ChevronRight size={15}/></button></article>
     <article className="learning-panel focus-panel"><div className="panel-head"><span className="panel-icon lavender"><Timer size={19}/></span><div><h3>Focus session</h3><p>One goal. A little quiet time.</p></div><button className="icon-btn" aria-label="Open focus timer" onClick={()=>handleTool("focus")}><ArrowRight size={17}/></button></div><div className="focus-stat"><strong>{Math.floor(focusMinutes/60)}h {focusMinutes%60}m</strong><span>focused time completed on this device</span></div><button className="panel-action" onClick={()=>handleTool("focus")}>Start a 25-minute session <ChevronRight size={15}/></button></article></div>
