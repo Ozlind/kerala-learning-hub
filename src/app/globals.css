@@ -54,3 +54,8 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .quiz-result .panel-icon{margin:0 auto 12px}
 .quiz-result h3{font-size:25px;margin:8px 0}
 @media(max-width:480px){.subject-actions{gap:12px}.quiz-question h3{font-size:18px}.quiz-option{padding:11px 12px}}
+
+/* Student-created topic controls */
+.custom-topic-form{margin:14px 0 8px}
+.custom-topic-note{font-size:12px;margin:8px 0 14px}
+@media(max-width:480px){.custom-topic-form{align-items:stretch;flex-direction:column}.custom-topic-form .pill-btn{justify-content:center}}
