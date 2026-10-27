@@ -108,7 +108,7 @@ export default function Home(){
      if(!value||typeof value!=="object")return false;
      const task=value as Partial<StudyTask>;
      if(typeof task.id!=="string"||!task.id.trim()||task.id.length>100||taskIds.has(task.id)||typeof task.title!=="string"||!task.title.trim()||task.title.length>200||typeof task.classId!=="string"||!classIds.has(task.classId)||typeof task.done!=="boolean")return false;
-     if(task.date!==undefined&&(typeof task.date!=="string"||!/^(\\d{4})-\\d{2}-\\d{2}$/.test(task.date)))return false;
+     if(task.date!==undefined&&(typeof task.date!=="string"||!/^(\d{4})-\d{2}-\d{2}$/.test(task.date)))return false;
      taskIds.add(task.id);return true;
     });
     const revisionData=data.revised as Record<string,unknown>;
