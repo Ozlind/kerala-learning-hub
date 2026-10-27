@@ -39,7 +39,7 @@ function extractArray(exportName) {
         escaped = false;
         continue;
       }
-      if (char === "\\\\") {
+      if (char === "\\") {
         escaped = true;
         continue;
       }
