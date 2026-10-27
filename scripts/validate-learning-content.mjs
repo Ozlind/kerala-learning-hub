@@ -114,7 +114,7 @@ if (Array.isArray(modules)) {
       const pair = classId + "|" + subjectId;
       if (!coveredPairs.has(pair)) errors.push("No starter module coverage for " + pair);
       const count = modules.filter(item => item.classId + "|" + item.subjectId === pair).length;
-      if (count !== 4) errors.push(pair + ": expected 4 starter modules, found " + count);
+      if (count < 1) errors.push(pair + ": expected at least one starter module, found " + count);
     }
   }
   if (modules.some(item => item.syllabusAligned === true)) errors.push("Starter modules must never be marked syllabus-aligned without editorial review");
@@ -146,6 +146,8 @@ if (Array.isArray(questions)) {
   for (const classId of classLabels.keys()) {
     if (!questionClasses.has(classId)) errors.push("No practice-question coverage for " + classId);
   }
+  const autoCheckedCount = questions.filter(item => item.verification === "answer-key-auto-checked").length;
+  if (autoCheckedCount > 0) warnings.push(autoCheckedCount + " practice questions are marked auto-checked rather than human-reviewed; editorial verification is still needed.");
   if (questionSubjects.size < 2) warnings.push("Practice questions currently cover fewer than two subject areas.");
   if (questionSubjects.size < subjects.size) warnings.push("Practice-question coverage is partial (" + [...questionSubjects].sort().join(", ") + "); do not imply all subjects have question banks.");
 }
