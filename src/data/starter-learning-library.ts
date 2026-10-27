@@ -9564,12 +9564,12 @@ export const STARTER_QUESTIONS: StarterQuestion[] = [
     "subjectId": "mathematics",
     "skillTag": "multiplication",
     "difficulty": "developing",
-    "prompt": "A set has 1 groups with 3 items in each group. How many items are there?",
+    "prompt": "A set has 1 group with 3 items in each group. How many items are there?",
     "options": [
       "4",
       "3",
       "2",
-      "3"
+      "1"
     ],
     "correctIndex": 1,
     "explanation": "Equal groups are multiplied: 1 × 3 = 3.",
@@ -9584,10 +9584,10 @@ export const STARTER_QUESTIONS: StarterQuestion[] = [
     "difficulty": "developing",
     "prompt": "Which expression means “1 more than 10”?",
     "options": [
-      "-9",
+      "9",
       "10",
       "11",
-      "10"
+      "12"
     ],
     "correctIndex": 2,
     "explanation": "“More than” means addition: 10 + 1.",
@@ -9712,7 +9712,7 @@ export const STARTER_QUESTIONS: StarterQuestion[] = [
     "options": [
       "14",
       "16",
-      "14",
+      "15",
       "11"
     ],
     "correctIndex": 1,
@@ -9928,7 +9928,7 @@ export const STARTER_QUESTIONS: StarterQuestion[] = [
     "options": [
       "6",
       "9",
-      "6",
+      "8",
       "3"
     ],
     "correctIndex": 1,
@@ -10253,7 +10253,7 @@ export const STARTER_QUESTIONS: StarterQuestion[] = [
       "20",
       "22",
       "17",
-      "17"
+      "21"
     ],
     "correctIndex": 1,
     "explanation": "12 + 10 = 22.",
