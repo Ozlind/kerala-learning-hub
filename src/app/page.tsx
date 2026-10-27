@@ -121,17 +121,42 @@ export default function Home(){
  }
  function importStudyData(event:React.ChangeEvent<HTMLInputElement>){
   const file=event.target.files?.[0];if(!file)return;
+  const maxBackupBytes=2*1024*1024;
+  if(file.size>maxBackupBytes){notify("Backup is too large. Choose a file under 2 MB.");event.target.value="";return;}
   const reader=new FileReader();
-  reader.onload=()=>{try{
-   const data=JSON.parse(String(reader.result)) as {format?:string;version?:number;selectedClass?:string;tasks?:unknown;revised?:unknown;focusMinutes?:unknown;customTopics?:unknown};
-   if(data.format!=="kerala-learning-hub-backup"||data.version!==1||!Array.isArray(data.tasks)||!data.revised||typeof data.revised!=="object"||typeof data.focusMinutes!=="number"||!Number.isFinite(data.focusMinutes)||data.focusMinutes<0){notify("That file is not a valid study backup.");return;}
-   const validTasks=data.tasks.every((t)=>!!t&&typeof t==="object"&&typeof (t as StudyTask).id==="string"&&typeof (t as StudyTask).title==="string"&&typeof (t as StudyTask).classId==="string"&&typeof (t as StudyTask).done==="boolean");
-   const validRevision=Object.values(data.revised as Record<string,unknown>).every(v=>Array.isArray(v)&&v.every(x=>typeof x==="string"));
-   const validCustomTopics=data.customTopics===undefined||(!!data.customTopics&&typeof data.customTopics==="object"&&!Array.isArray(data.customTopics)&&Object.values(data.customTopics as Record<string,unknown>).every(bySubject=>!!bySubject&&typeof bySubject==="object"&&!Array.isArray(bySubject)&&Object.values(bySubject as Record<string,unknown>).every(list=>Array.isArray(list)&&list.every(topic=>typeof topic==="string"))));
-   if(!validTasks||!validRevision||!validCustomTopics){notify("Backup data is invalid or incomplete.");return;}
-   setTasks(data.tasks as StudyTask[]);setRevised(data.revised as Record<string,string[]>);setFocusMinutes(Math.floor(data.focusMinutes));if(data.customTopics)setCustomTopics(data.customTopics as Record<string,Record<string,string[]>>);if(typeof data.selectedClass==="string"&&classes.some(c=>c.id===data.selectedClass))setSelected(data.selectedClass);notify("Study backup restored on this device.");
-  }catch{notify("Could not read this backup file.");}finally{event.target.value="";}};
-  reader.onerror=()=>{notify("Could not read this backup file.");event.target.value="";};reader.readAsText(file);
+  reader.onload=()=>{
+   try{
+    const data=JSON.parse(String(reader.result)) as {format?:unknown;version?:unknown;selectedClass?:unknown;tasks?:unknown;revised?:unknown;focusMinutes?:unknown;customTopics?:unknown};
+    const classIds=new Set(classes.map(c=>c.id));
+    const subjectNames=new Set(subjects.map(s=>s.name));
+    if(data.format!=="kerala-learning-hub-backup"||data.version!==1||!Array.isArray(data.tasks)||data.tasks.length>500||!data.revised||typeof data.revised!=="object"||Array.isArray(data.revised)||typeof data.focusMinutes!=="number"||!Number.isFinite(data.focusMinutes)||data.focusMinutes<0||data.focusMinutes>10000000){
+     notify("That file is not a valid study backup.");return;
+    }
+    const taskIds=new Set<string>();
+    const validTasks=data.tasks.every((value:unknown)=>{
+     if(!value||typeof value!=="object")return false;
+     const task=value as Partial<StudyTask>;
+     if(typeof task.id!=="string"||!task.id.trim()||task.id.length>100||taskIds.has(task.id)||typeof task.title!=="string"||!task.title.trim()||task.title.length>200||typeof task.classId!=="string"||!classIds.has(task.classId)||typeof task.done!=="boolean")return false;
+     if(task.date!==undefined&&(typeof task.date!=="string"||!/^(\d{4})-\d{2}-\d{2}$/.test(task.date)))return false;
+     taskIds.add(task.id);return true;
+    });
+    const revisionData=data.revised as Record<string,unknown>;
+    const validRevision=Object.entries(revisionData).every(([classId,value])=>classIds.has(classId)&&Array.isArray(value)&&value.length<=200&&value.every(topic=>typeof topic==="string"&&topic.length<=200));
+    const customData=data.customTopics;
+    const validCustomTopics=customData===undefined||(!!customData&&typeof customData==="object"&&!Array.isArray(customData)&&Object.entries(customData as Record<string,unknown>).every(([classId,bySubject])=>classIds.has(classId)&&!!bySubject&&typeof bySubject==="object"&&!Array.isArray(bySubject)&&Object.entries(bySubject as Record<string,unknown>).every(([subject,list])=>subjectNames.has(subject)&&Array.isArray(list)&&list.length<=100&&list.every(topic=>typeof topic==="string"&&topic.trim().length>0&&topic.length<=100))));
+    const validSelectedClass=data.selectedClass===undefined||(typeof data.selectedClass==="string"&&classIds.has(data.selectedClass));
+    if(!validTasks||!validRevision||!validCustomTopics||!validSelectedClass){notify("Backup data is invalid or incomplete.");return;}
+    setTasks(data.tasks as StudyTask[]);
+    setRevised(revisionData as Record<string,string[]>);
+    setFocusMinutes(Math.floor(data.focusMinutes));
+    if(customData!==undefined)setCustomTopics(customData as Record<string,Record<string,string[]>>);
+    if(typeof data.selectedClass==="string")setSelected(data.selectedClass);
+    notify("Study backup restored on this device.");
+   }catch{notify("Could not read this backup file.");}
+   finally{event.target.value="";}
+  };
+  reader.onerror=()=>{notify("Could not read this backup file.");event.target.value="";};
+  reader.readAsText(file);
  }
  const timerLabel=`${String(Math.floor(focusSeconds/60)).padStart(2,"0")}:${String(focusSeconds%60).padStart(2,"0")}`;
  return <main className="app-shell">
