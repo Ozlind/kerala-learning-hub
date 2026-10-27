@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "test": "npm run test:content",
+    "test:content": "node scripts/validate-learning-library.mjs",
+    "verify": "npm run test:content && npm run lint && npm run build"
   },
   "dependencies": {
     "next": "^15.5.10",
