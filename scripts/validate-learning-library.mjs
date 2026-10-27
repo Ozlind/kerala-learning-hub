@@ -151,6 +151,48 @@ for (const classId of expectedClasses) {
   assert.ok((questionCounts.get(classId) ?? 0) >= 10, `Expected at least 10 questions for ${classId}`);
 }
 
+const seniorClassIds = new Set(["class-8", "class-9", "class-10", "plus-one", "plus-two"]);
+const seniorMathQuestions = questions.filter(
+  (question) =>
+    seniorClassIds.has(question.classId) &&
+    question.subjectId === "mathematics" &&
+    /-math-skill-\\d+$/.test(question.id),
+);
+const seniorEnglishQuestions = questions.filter(
+  (question) =>
+    seniorClassIds.has(question.classId) &&
+    question.subjectId === "english" &&
+    /-literacy-skill-\\d+$/.test(question.id),
+);
+assert.equal(seniorMathQuestions.length, 25, "Each of Classes 8–10 and Plus One/Plus Two needs five tailored mathematics questions");
+assert.equal(seniorEnglishQuestions.length, 25, "Each of Classes 8–10 and Plus One/Plus Two needs five tailored English questions");
+
+const elementaryMathPrompt = /^(?:what is \\d+\\s*[+\\-−]\\s*\\d+\\?|a set has \\d+ groups|which expression means .*more than 10|a learner studies for \\d+ minutes)/i;
+for (const question of seniorMathQuestions) {
+  assert.ok(question.skillTag && question.skillTag !== "basic-arithmetic", `Use a meaningful skillTag for ${question.id}`);
+  assert.ok(
+    !elementaryMathPrompt.test(question.prompt),
+    `Elementary arithmetic should not be reused as a senior-grade quiz question: ${question.id}`,
+  );
+  assert.equal(
+    question.verification,
+    "original-practice-answer-checked",
+    `Senior-grade original questions need an explicit practice-answer status: ${question.id}`,
+  );
+}
+for (const question of seniorEnglishQuestions) {
+  assert.ok(question.skillTag && question.skillTag !== "general-literacy", `Use a meaningful skillTag for ${question.id}`);
+  assert.equal(
+    question.verification,
+    "original-practice-answer-checked",
+    `Senior-grade original questions need an explicit practice-answer status: ${question.id}`,
+  );
+}
+const seniorMathPromptKeys = seniorMathQuestions.map((question) => question.prompt.trim().toLocaleLowerCase());
+const seniorEnglishPromptKeys = seniorEnglishQuestions.map((question) => question.prompt.trim().toLocaleLowerCase());
+assert.equal(new Set(seniorMathPromptKeys).size, seniorMathPromptKeys.length, "Senior-grade mathematics prompts must be differentiated");
+assert.equal(new Set(seniorEnglishPromptKeys).size, seniorEnglishPromptKeys.length, "Senior-grade English prompts must be differentiated");
+
 console.log(`PASS: ${modules.length} starter modules cover all 12 class levels.`);
 console.log(`PASS: ${questions.length} practice questions have valid options, answers, and explanations.`);
 console.log("PASS: Starter content cannot be labelled syllabus-verified without updating explicit review gates.");
