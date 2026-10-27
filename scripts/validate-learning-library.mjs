@@ -5,11 +5,12 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const source = await readFile(path.join(root, "src/data/starter-learning-library.ts"), "utf8");
+const librarySource = await readFile(path.join(root, "src/data/starter-learning-library.ts"), "utf8");
+const registrySource = await readFile(path.join(root, "src/data/official-learning-sources.ts"), "utf8");
 
-function extractArray(exportName) {
+function extractArray(exportName, inputSource) {
   const declaration = new RegExp(`export\\s+const\\s+${exportName}\\s*:[^=]+?=\\s*\\[`);
-  const match = declaration.exec(source);
+  const match = declaration.exec(inputSource);
   assert.ok(match, `Missing exported array: ${exportName}`);
 
   const start = match.index + match[0].lastIndexOf("[");
@@ -19,9 +20,9 @@ function extractArray(exportName) {
   let lineComment = false;
   let blockComment = false;
 
-  for (let index = start; index < source.length; index += 1) {
-    const char = source[index];
-    const next = source[index + 1];
+  for (let index = start; index < inputSource.length; index += 1) {
+    const char = inputSource[index];
+    const next = inputSource[index + 1];
 
     if (lineComment) {
       if (char === "\n") lineComment = false;
@@ -64,7 +65,7 @@ function extractArray(exportName) {
     if (char === "]") {
       depth -= 1;
       if (depth === 0) {
-        const literal = source.slice(start, index + 1);
+        const literal = inputSource.slice(start, index + 1);
         return runInNewContext(`(${literal})`, Object.create(null), {
           timeout: 1000,
           contextCodeGeneration: { strings: false, wasm: false },
@@ -76,8 +77,27 @@ function extractArray(exportName) {
   throw new Error(`Could not find the end of ${exportName}`);
 }
 
-const modules = extractArray("STARTER_MODULES");
-const questions = extractArray("STARTER_QUESTIONS");
+const modules = extractArray("STARTER_MODULES", librarySource);
+const questions = extractArray("STARTER_QUESTIONS", librarySource);
+const officialSources = extractArray("OFFICIAL_LEARNING_SOURCES", registrySource);
+assert.ok(Array.isArray(officialSources) && officialSources.length >= 2, "Add the official source discovery registry");
+
+const officialSourceIds = new Set();
+for (const sourceRecord of officialSources) {
+  assert.ok(typeof sourceRecord.id === "string" && sourceRecord.id.trim(), "Every official source needs an id");
+  assert.ok(!officialSourceIds.has(sourceRecord.id), `Duplicate official source id: ${sourceRecord.id}`);
+  officialSourceIds.add(sourceRecord.id);
+  assert.equal(sourceRecord.authority, "SCERT Kerala", `Unexpected authority for ${sourceRecord.id}`);
+  assert.ok(
+    /^https:\/\/(?:textbooksarchives|questionpool)\.scert\.kerala\.gov\.in\//.test(sourceRecord.url),
+    `Official source must use an expected SCERT domain: ${sourceRecord.id}`,
+  );
+  assert.ok(
+    ["discovery-only", "historical-catalogue"].includes(sourceRecord.status),
+    `Source status must not imply chapter verification: ${sourceRecord.id}`,
+  );
+  assert.ok(typeof sourceRecord.notes === "string" && sourceRecord.notes.length >= 30, `Add verification guidance for ${sourceRecord.id}`);
+}
 const expectedClasses = [
   ...Array.from({ length: 10 }, (_, index) => `class-${index + 1}`),
   "plus-one",
@@ -106,6 +126,9 @@ for (const module of modules) {
   assert.ok(Array.isArray(module.activities) && module.activities.length >= 2, `Add at least two activities to ${module.id}`);
   assert.ok(Array.isArray(module.reviewChecklist) && module.reviewChecklist.length >= 2, `Add review checks to ${module.id}`);
   assert.ok(Array.isArray(module.sourceIds), `sourceIds must be an array on ${module.id}`);
+  for (const sourceId of module.sourceIds) {
+    assert.ok(officialSourceIds.has(sourceId), `Unknown official source id ${sourceId} on ${module.id}`);
+  }
 
   assert.equal(module.syllabusAligned, false, `${module.id} must not claim official syllabus alignment`);
   assert.equal(
@@ -193,6 +216,7 @@ const seniorEnglishPromptKeys = seniorEnglishQuestions.map((question) => questio
 assert.equal(new Set(seniorMathPromptKeys).size, seniorMathPromptKeys.length, "Senior-grade mathematics prompts must be differentiated");
 assert.equal(new Set(seniorEnglishPromptKeys).size, seniorEnglishPromptKeys.length, "Senior-grade English prompts must be differentiated");
 
+console.log(`PASS: ${officialSources.length} official-source records use approved SCERT domains and non-verified statuses.`);
 console.log(`PASS: ${modules.length} starter modules cover all 12 class levels.`);
 console.log(`PASS: ${questions.length} practice questions have valid options, answers, and explanations.`);
 console.log("PASS: Starter content cannot be labelled syllabus-verified without updating explicit review gates.");
