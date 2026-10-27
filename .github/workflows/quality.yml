@@ -35,6 +35,9 @@ jobs:
       - name: Type-check
         run: npm run lint
 
+      - name: Validate learning library sources and content
+        run: npm run test:content
+
       - name: Validate learning content structure
         run: npm run validate:content
 
