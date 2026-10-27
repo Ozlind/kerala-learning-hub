@@ -10786,901 +10786,901 @@ export const STARTER_QUESTIONS: StarterQuestion[] = [
     "id": "class-8-math-skill-1",
     "classId": "class-8",
     "subjectId": "mathematics",
-    "skillTag": "addition",
-    "difficulty": "foundation",
-    "prompt": "What is 15 + 13?",
+    "skillTag": "linear-equations",
+    "difficulty": "developing",
+    "prompt": "Solve 3x − 7 = 20.",
     "options": [
-      "26",
-      "28",
-      "20",
-      "23"
+      "x = 7",
+      "x = 9",
+      "x = 13",
+      "x = 27"
     ],
     "correctIndex": 1,
-    "explanation": "15 + 13 = 28.",
+    "explanation": "Add 7 to both sides to get 3x = 27, then divide by 3. Therefore x = 9.",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-8-math-skill-2",
     "classId": "class-8",
     "subjectId": "mathematics",
-    "skillTag": "subtraction",
-    "difficulty": "foundation",
-    "prompt": "What is 28 − 16?",
+    "skillTag": "laws-of-exponents",
+    "difficulty": "developing",
+    "prompt": "Simplify (2³ × 2⁴) ÷ 2².",
     "options": [
-      "12",
-      "20",
-      "36",
-      "8"
+      "2⁵ = 32",
+      "2⁹ = 512",
+      "2³ = 8",
+      "2¹ = 2"
     ],
     "correctIndex": 0,
-    "explanation": "The difference is 28 − 16 = 12.",
+    "explanation": "When multiplying powers with the same base, add the exponents; when dividing, subtract them: 3 + 4 − 2 = 5.",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-8-math-skill-3",
     "classId": "class-8",
     "subjectId": "mathematics",
-    "skillTag": "multiplication",
+    "skillTag": "percentage-discount",
     "difficulty": "developing",
-    "prompt": "A set has 8 groups with 3 items in each group. How many items are there?",
+    "prompt": "A bag marked ₹800 is sold at a 15% discount. What is the sale price?",
     "options": [
-      "11",
-      "24",
-      "16",
-      "3"
+      "₹680",
+      "₹700",
+      "₹720",
+      "₹785"
     ],
-    "correctIndex": 1,
-    "explanation": "Equal groups are multiplied: 8 × 3 = 24.",
+    "correctIndex": 0,
+    "explanation": "15% of ₹800 is ₹120. Subtract the discount: ₹800 − ₹120 = ₹680.",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-8-math-skill-4",
     "classId": "class-8",
     "subjectId": "mathematics",
-    "skillTag": "word-problems",
+    "skillTag": "ratio-and-angles",
     "difficulty": "developing",
-    "prompt": "Which expression means “8 more than 10”?",
+    "prompt": "The angles of a triangle are in the ratio 2:3:4. What is the largest angle?",
     "options": [
-      "-2",
-      "80",
-      "18",
-      "1.25"
+      "40°",
+      "60°",
+      "80°",
+      "100°"
     ],
     "correctIndex": 2,
-    "explanation": "“More than” means addition: 10 + 8.",
+    "explanation": "The ratio has 9 equal parts, so each part is 180° ÷ 9 = 20°. The largest angle is 4 × 20° = 80°.",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-8-math-skill-5",
     "classId": "class-8",
     "subjectId": "mathematics",
-    "skillTag": "time-management-math",
-    "difficulty": "application",
-    "prompt": "A learner studies for 40 minutes and then another 10 minutes. How many minutes in total?",
+    "skillTag": "probability",
+    "difficulty": "developing",
+    "prompt": "A fair six-sided die is rolled once. What is the probability of getting a prime number?",
     "options": [
-      "40",
-      "45",
-      "50",
-      "18"
+      "1/6",
+      "1/3",
+      "1/2",
+      "2/3"
     ],
     "correctIndex": 2,
-    "explanation": "Add both study periods: 40 + 10 = 50 minutes.",
+    "explanation": "The prime results are 2, 3 and 5: 3 favourable outcomes out of 6, so the probability is 3/6 = 1/2.",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-8-literacy-skill-1",
     "classId": "class-8",
     "subjectId": "english",
-    "skillTag": "main-idea",
-    "difficulty": "foundation",
-    "prompt": "Which sentence gives the main idea of a paragraph?",
+    "skillTag": "subject-verb-agreement",
+    "difficulty": "developing",
+    "prompt": "Choose the correct verb: “Neither of the players ___ ready.”",
     "options": [
-      "A detail mentioned once",
-      "The central point the paragraph explains",
-      "The longest sentence",
-      "The final word"
+      "are",
+      "is",
+      "were",
+      "be"
     ],
     "correctIndex": 1,
-    "explanation": "The main idea is the central point; supporting details explain it.",
+    "explanation": "“Neither” is singular in this construction, so the verb is “is”.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-8-literacy-skill-2",
     "classId": "class-8",
     "subjectId": "english",
     "skillTag": "context-clues",
-    "difficulty": "foundation",
-    "prompt": "Which is the best way to infer a word's meaning while reading?",
+    "difficulty": "developing",
+    "prompt": "In “The footpath was treacherous after the rain; loose stones made every step risky,” what does “treacherous” mean?",
     "options": [
-      "Ignore the whole sentence",
-      "Use surrounding clues and then verify",
-      "Always choose the shortest meaning",
-      "Guess without rereading"
+      "Beautiful",
+      "Dangerous",
+      "Familiar",
+      "Convenient"
     ],
     "correctIndex": 1,
-    "explanation": "Context clues help form a sensible meaning, which should be checked if possible.",
+    "explanation": "The loose stones and risky steps show that the path is dangerous.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-8-literacy-skill-3",
     "classId": "class-8",
     "subjectId": "english",
-    "skillTag": "clear-writing",
+    "skillTag": "reported-speech",
     "difficulty": "developing",
-    "prompt": "Which sentence is clearest for formal school writing?",
+    "prompt": "Mira said, “I am waiting for the bus.” Which sentence reports her words correctly?",
     "options": [
-      "Thing was good and stuff",
-      "The experiment showed a clear change in temperature.",
-      "It was like, you know, different",
-      "Very very very different"
+      "Mira said that I am waiting for the bus.",
+      "Mira said that she was waiting for the bus.",
+      "Mira says that she waited for the bus yesterday.",
+      "Mira said she is waited for the bus."
     ],
     "correctIndex": 1,
-    "explanation": "Specific wording communicates the observation clearly and precisely.",
+    "explanation": "In reported speech, “I” becomes “she” and “am waiting” usually shifts to “was waiting” when the reporting verb is past.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-8-literacy-skill-4",
     "classId": "class-8",
     "subjectId": "english",
-    "skillTag": "source-checking",
+    "skillTag": "passive-voice",
     "difficulty": "developing",
-    "prompt": "What should you do before sharing a factual claim online?",
+    "prompt": "Choose the correct passive form of “The students planted the saplings.”",
     "options": [
-      "Share it immediately",
-      "Check the source and compare reliable references",
-      "Trust the headline only",
-      "Assume a picture proves it"
+      "The saplings planted the students.",
+      "The saplings were planted by the students.",
+      "The students were planted by the saplings.",
+      "The saplings are planting the students."
     ],
     "correctIndex": 1,
-    "explanation": "Check the original source, date and corroborating evidence before sharing.",
+    "explanation": "The object “the saplings” becomes the subject; the past simple passive is “were planted”.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-8-literacy-skill-5",
     "classId": "class-8",
     "subjectId": "english",
-    "skillTag": "revision-strategy",
-    "difficulty": "application",
-    "prompt": "What makes a useful revision note?",
+    "skillTag": "evidence-and-opinion",
+    "difficulty": "developing",
+    "prompt": "Which detail is strongest evidence that a school recycling plan reduced waste?",
     "options": [
-      "Copying every sentence",
-      "A short summary in your own words with key terms",
-      "Only highlighting the page",
-      "Writing without checking meaning"
+      "Students said the bins looked attractive.",
+      "The headteacher liked the idea.",
+      "Measured landfill waste fell by 20% in the month after sorting bins were introduced.",
+      "Recycling is always the best activity."
     ],
-    "correctIndex": 1,
-    "explanation": "Concise notes in your own words support understanding and recall.",
+    "correctIndex": 2,
+    "explanation": "A measured change directly connected to the plan is stronger evidence than preference or opinion.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-9-math-skill-1",
     "classId": "class-9",
     "subjectId": "mathematics",
-    "skillTag": "addition",
-    "difficulty": "foundation",
-    "prompt": "What is 16 + 14?",
+    "skillTag": "factorisation",
+    "difficulty": "application",
+    "prompt": "Which is the factorisation of x² − 9x + 20?",
     "options": [
-      "28",
-      "30",
-      "21",
-      "25"
+      "(x − 2)(x − 10)",
+      "(x + 4)(x + 5)",
+      "(x − 4)(x − 5)",
+      "(x − 1)(x − 20)"
     ],
-    "correctIndex": 1,
-    "explanation": "16 + 14 = 30.",
+    "correctIndex": 2,
+    "explanation": "The numbers −4 and −5 multiply to 20 and add to −9, so x² − 9x + 20 = (x − 4)(x − 5).",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-9-math-skill-2",
     "classId": "class-9",
     "subjectId": "mathematics",
-    "skillTag": "subtraction",
-    "difficulty": "foundation",
-    "prompt": "What is 29 − 17?",
+    "skillTag": "pythagoras-theorem",
+    "difficulty": "application",
+    "prompt": "A right triangle has perpendicular sides of 6 cm and 8 cm. What is its hypotenuse?",
     "options": [
-      "12",
-      "21",
-      "37",
-      "8"
+      "9 cm",
+      "10 cm",
+      "12 cm",
+      "14 cm"
     ],
-    "correctIndex": 0,
-    "explanation": "The difference is 29 − 17 = 12.",
+    "correctIndex": 1,
+    "explanation": "By Pythagoras' theorem, c² = 6² + 8² = 36 + 64 = 100, so c = 10 cm.",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-9-math-skill-3",
     "classId": "class-9",
     "subjectId": "mathematics",
-    "skillTag": "multiplication",
-    "difficulty": "developing",
-    "prompt": "A set has 9 groups with 3 items in each group. How many items are there?",
+    "skillTag": "linear-equations-substitution",
+    "difficulty": "application",
+    "prompt": "If 2x + 3y = 12 and x = 3, what is y?",
     "options": [
-      "12",
-      "27",
-      "18",
-      "3"
+      "1",
+      "2",
+      "3",
+      "4"
     ],
     "correctIndex": 1,
-    "explanation": "Equal groups are multiplied: 9 × 3 = 27.",
+    "explanation": "Substitute x = 3: 6 + 3y = 12, so 3y = 6 and y = 2.",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-9-math-skill-4",
     "classId": "class-9",
     "subjectId": "mathematics",
-    "skillTag": "word-problems",
-    "difficulty": "developing",
-    "prompt": "Which expression means “9 more than 10”?",
+    "skillTag": "coordinate-geometry-midpoint",
+    "difficulty": "application",
+    "prompt": "What is the midpoint of A(−2, 4) and B(6, 8)?",
     "options": [
-      "-1",
-      "90",
-      "19",
-      "1.1111111111111112"
+      "(2, 6)",
+      "(4, 4)",
+      "(−4, 6)",
+      "(2, 12)"
     ],
-    "correctIndex": 2,
-    "explanation": "“More than” means addition: 10 + 9.",
+    "correctIndex": 0,
+    "explanation": "Average the x-coordinates and y-coordinates: ((−2 + 6)/2, (4 + 8)/2) = (2, 6).",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-9-math-skill-5",
     "classId": "class-9",
     "subjectId": "mathematics",
-    "skillTag": "time-management-math",
+    "skillTag": "probability",
     "difficulty": "application",
-    "prompt": "A learner studies for 45 minutes and then another 10 minutes. How many minutes in total?",
+    "prompt": "A fair die is rolled once. What is the probability of getting a number greater than 4?",
     "options": [
-      "45",
-      "50",
-      "55",
-      "19"
+      "1/6",
+      "1/2",
+      "1/3",
+      "2/3"
     ],
     "correctIndex": 2,
-    "explanation": "Add both study periods: 45 + 10 = 55 minutes.",
+    "explanation": "Only 5 and 6 are greater than 4. The probability is 2/6 = 1/3.",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-9-literacy-skill-1",
     "classId": "class-9",
     "subjectId": "english",
-    "skillTag": "main-idea",
-    "difficulty": "foundation",
-    "prompt": "Which sentence gives the main idea of a paragraph?",
+    "skillTag": "subordinate-clauses",
+    "difficulty": "application",
+    "prompt": "In “Although the road was narrow, the driver slowed down,” which words form the subordinate clause?",
     "options": [
-      "A detail mentioned once",
-      "The central point the paragraph explains",
-      "The longest sentence",
-      "The final word"
+      "The driver slowed down",
+      "Although the road was narrow",
+      "The road was",
+      "Slowed down"
     ],
     "correctIndex": 1,
-    "explanation": "The main idea is the central point; supporting details explain it.",
+    "explanation": "“Although the road was narrow” depends on the main clause and begins with the subordinating conjunction “although”.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-9-literacy-skill-2",
     "classId": "class-9",
     "subjectId": "english",
-    "skillTag": "context-clues",
-    "difficulty": "foundation",
-    "prompt": "Which is the best way to infer a word's meaning while reading?",
+    "skillTag": "inference-from-evidence",
+    "difficulty": "application",
+    "prompt": "After a week of heavy rain, a river rose above the lower steps at a ghat. When the rain stopped, the waterline slowly fell. What is supported by these details?",
     "options": [
-      "Ignore the whole sentence",
-      "Use surrounding clues and then verify",
-      "Always choose the shortest meaning",
-      "Guess without rereading"
+      "The river has dried up completely.",
+      "The river level fell after the rainfall stopped.",
+      "The ghat was rebuilt.",
+      "The river will never rise again."
     ],
     "correctIndex": 1,
-    "explanation": "Context clues help form a sensible meaning, which should be checked if possible.",
+    "explanation": "The passage directly describes the waterline falling; it does not support claims about the river drying up or future conditions.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-9-literacy-skill-3",
     "classId": "class-9",
     "subjectId": "english",
-    "skillTag": "clear-writing",
-    "difficulty": "developing",
-    "prompt": "Which sentence is clearest for formal school writing?",
+    "skillTag": "reported-speech",
+    "difficulty": "application",
+    "prompt": "The coach said, “We will practise tomorrow.” Which is the most appropriate reported form?",
     "options": [
-      "Thing was good and stuff",
-      "The experiment showed a clear change in temperature.",
-      "It was like, you know, different",
-      "Very very very different"
+      "The coach said they will practise tomorrow.",
+      "The coach said that they would practise the following day.",
+      "The coach says that we practised the day before.",
+      "The coach said that they practise yesterday."
     ],
     "correctIndex": 1,
-    "explanation": "Specific wording communicates the observation clearly and precisely.",
+    "explanation": "With a past reporting verb, “will” commonly shifts to “would” and “tomorrow” to “the following day”.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-9-literacy-skill-4",
     "classId": "class-9",
     "subjectId": "english",
-    "skillTag": "source-checking",
-    "difficulty": "developing",
-    "prompt": "What should you do before sharing a factual claim online?",
+    "skillTag": "sentence-punctuation",
+    "difficulty": "application",
+    "prompt": "Choose the correctly punctuated sentence.",
     "options": [
-      "Share it immediately",
-      "Check the source and compare reliable references",
-      "Trust the headline only",
-      "Assume a picture proves it"
+      "When the bell rang the students, left the room.",
+      "When, the bell rang the students left the room.",
+      "When the bell rang, the students left the room.",
+      "When the bell, rang the students left the room."
     ],
-    "correctIndex": 1,
-    "explanation": "Check the original source, date and corroborating evidence before sharing.",
+    "correctIndex": 2,
+    "explanation": "A comma separates the introductory dependent clause from the main clause.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-9-literacy-skill-5",
     "classId": "class-9",
     "subjectId": "english",
-    "skillTag": "revision-strategy",
+    "skillTag": "source-evaluation",
     "difficulty": "application",
-    "prompt": "What makes a useful revision note?",
+    "prompt": "You need reliable annual rainfall totals for a school report. Which source should you consult first?",
     "options": [
-      "Copying every sentence",
-      "A short summary in your own words with key terms",
-      "Only highlighting the page",
-      "Writing without checking meaning"
+      "An anonymous social-media comment.",
+      "A screenshot with no date or source.",
+      "An official meteorological dataset with dates and methods.",
+      "A forwarded message that says “trust me”."
     ],
-    "correctIndex": 1,
-    "explanation": "Concise notes in your own words support understanding and recall.",
+    "correctIndex": 2,
+    "explanation": "An official dataset with provenance and dates can be checked and is more reliable than unsourced claims.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-10-math-skill-1",
     "classId": "class-10",
     "subjectId": "mathematics",
-    "skillTag": "addition",
-    "difficulty": "foundation",
-    "prompt": "What is 17 + 15?",
+    "skillTag": "quadratic-equations",
+    "difficulty": "exam-practice",
+    "prompt": "What are the roots of x² − 5x + 6 = 0?",
     "options": [
-      "30",
-      "32",
-      "22",
-      "27"
+      "1 and 6",
+      "−2 and −3",
+      "2 and 3",
+      "−2 and 3"
     ],
-    "correctIndex": 1,
-    "explanation": "17 + 15 = 32.",
+    "correctIndex": 2,
+    "explanation": "Factor the equation as (x − 2)(x − 3) = 0. The roots are x = 2 and x = 3.",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-10-math-skill-2",
     "classId": "class-10",
     "subjectId": "mathematics",
-    "skillTag": "subtraction",
-    "difficulty": "foundation",
-    "prompt": "What is 30 − 18?",
+    "skillTag": "arithmetic-progression",
+    "difficulty": "exam-practice",
+    "prompt": "An arithmetic sequence begins 5, 8, 11, 14, … What is its 20th term?",
     "options": [
-      "12",
-      "22",
-      "38",
-      "8"
+      "59",
+      "60",
+      "62",
+      "65"
     ],
-    "correctIndex": 0,
-    "explanation": "The difference is 30 − 18 = 12.",
+    "correctIndex": 2,
+    "explanation": "The first term is 5 and the common difference is 3. The 20th term is 5 + 19 × 3 = 62.",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-10-math-skill-3",
     "classId": "class-10",
     "subjectId": "mathematics",
-    "skillTag": "multiplication",
-    "difficulty": "developing",
-    "prompt": "A set has 10 groups with 3 items in each group. How many items are there?",
+    "skillTag": "trigonometry",
+    "difficulty": "exam-practice",
+    "prompt": "For an acute angle θ, tan θ = 3/4. What is sin θ?",
     "options": [
-      "13",
-      "30",
-      "20",
-      "3"
+      "4/5",
+      "3/5",
+      "3/4",
+      "5/3"
     ],
     "correctIndex": 1,
-    "explanation": "Equal groups are multiplied: 10 × 3 = 30.",
+    "explanation": "A right triangle with opposite:adjacent = 3:4 has hypotenuse 5. Therefore sin θ = opposite/hypotenuse = 3/5.",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-10-math-skill-4",
     "classId": "class-10",
     "subjectId": "mathematics",
-    "skillTag": "word-problems",
-    "difficulty": "developing",
-    "prompt": "Which expression means “10 more than 10”?",
+    "skillTag": "coordinate-geometry-distance",
+    "difficulty": "exam-practice",
+    "prompt": "What is the distance between points (1, 2) and (4, 6)?",
     "options": [
-      "0",
-      "100",
-      "20",
-      "1"
+      "4",
+      "5",
+      "6",
+      "7"
     ],
-    "correctIndex": 2,
-    "explanation": "“More than” means addition: 10 + 10.",
+    "correctIndex": 1,
+    "explanation": "The horizontal and vertical differences are 3 and 4. The distance is √(3² + 4²) = √25 = 5.",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-10-math-skill-5",
     "classId": "class-10",
     "subjectId": "mathematics",
-    "skillTag": "time-management-math",
-    "difficulty": "application",
-    "prompt": "A learner studies for 50 minutes and then another 10 minutes. How many minutes in total?",
+    "skillTag": "probability",
+    "difficulty": "exam-practice",
+    "prompt": "A bag contains 3 red, 2 blue and 1 green counter. One counter is picked at random. What is the probability it is not blue?",
     "options": [
-      "50",
-      "55",
-      "60",
-      "20"
+      "1/3",
+      "1/2",
+      "2/3",
+      "5/6"
     ],
     "correctIndex": 2,
-    "explanation": "Add both study periods: 50 + 10 = 60 minutes.",
+    "explanation": "There are 4 non-blue counters out of 6 in total, so the probability is 4/6 = 2/3.",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-10-literacy-skill-1",
     "classId": "class-10",
     "subjectId": "english",
-    "skillTag": "main-idea",
-    "difficulty": "foundation",
-    "prompt": "Which sentence gives the main idea of a paragraph?",
+    "skillTag": "reported-speech",
+    "difficulty": "exam-practice",
+    "prompt": "Riya said, “I have completed the assignment.” Choose the correct reported form.",
     "options": [
-      "A detail mentioned once",
-      "The central point the paragraph explains",
-      "The longest sentence",
-      "The final word"
+      "Riya said that I have completed the assignment.",
+      "Riya said that she had completed the assignment.",
+      "Riya says she completed the assignment tomorrow.",
+      "Riya said that she has completing the assignment."
     ],
     "correctIndex": 1,
-    "explanation": "The main idea is the central point; supporting details explain it.",
+    "explanation": "The pronoun changes to “she” and the present perfect commonly shifts to past perfect after a past reporting verb.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-10-literacy-skill-2",
     "classId": "class-10",
     "subjectId": "english",
-    "skillTag": "context-clues",
-    "difficulty": "foundation",
-    "prompt": "Which is the best way to infer a word's meaning while reading?",
+    "skillTag": "subject-verb-agreement",
+    "difficulty": "exam-practice",
+    "prompt": "Choose the correct verb: “Neither the teachers nor the principal ___ available for the meeting.”",
     "options": [
-      "Ignore the whole sentence",
-      "Use surrounding clues and then verify",
-      "Always choose the shortest meaning",
-      "Guess without rereading"
+      "were",
+      "are",
+      "was",
+      "have been"
     ],
-    "correctIndex": 1,
-    "explanation": "Context clues help form a sensible meaning, which should be checked if possible.",
+    "correctIndex": 2,
+    "explanation": "With “neither … nor”, the verb commonly agrees with the nearer subject, “the principal”, which is singular.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-10-literacy-skill-3",
     "classId": "class-10",
     "subjectId": "english",
-    "skillTag": "clear-writing",
-    "difficulty": "developing",
-    "prompt": "Which sentence is clearest for formal school writing?",
+    "skillTag": "passive-voice",
+    "difficulty": "exam-practice",
+    "prompt": "Choose the correct passive form of “The team will publish the results tomorrow.”",
     "options": [
-      "Thing was good and stuff",
-      "The experiment showed a clear change in temperature.",
-      "It was like, you know, different",
-      "Very very very different"
+      "The results will publish the team tomorrow.",
+      "The results will be published by the team tomorrow.",
+      "The team will be published by the results tomorrow.",
+      "The results were publishing tomorrow."
     ],
     "correctIndex": 1,
-    "explanation": "Specific wording communicates the observation clearly and precisely.",
+    "explanation": "The future passive uses “will be” plus the past participle: “will be published”.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-10-literacy-skill-4",
     "classId": "class-10",
     "subjectId": "english",
-    "skillTag": "source-checking",
-    "difficulty": "developing",
-    "prompt": "What should you do before sharing a factual claim online?",
+    "skillTag": "logical-connectors",
+    "difficulty": "exam-practice",
+    "prompt": "In “The road was flooded; therefore, the match was postponed,” what relationship does “therefore” signal?",
     "options": [
-      "Share it immediately",
-      "Check the source and compare reliable references",
-      "Trust the headline only",
-      "Assume a picture proves it"
+      "Contrast",
+      "A result or consequence",
+      "An example",
+      "A comparison"
     ],
     "correctIndex": 1,
-    "explanation": "Check the original source, date and corroborating evidence before sharing.",
+    "explanation": "“Therefore” introduces the consequence of the road being flooded.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "class-10-literacy-skill-5",
     "classId": "class-10",
     "subjectId": "english",
-    "skillTag": "revision-strategy",
-    "difficulty": "application",
-    "prompt": "What makes a useful revision note?",
+    "skillTag": "author-attitude",
+    "difficulty": "exam-practice",
+    "prompt": "A report says: “The proposal promises faster service, but it provides no budget, timeline or evidence of feasibility.” What is the writer’s attitude?",
     "options": [
-      "Copying every sentence",
-      "A short summary in your own words with key terms",
-      "Only highlighting the page",
-      "Writing without checking meaning"
+      "Unquestioningly enthusiastic",
+      "Cautious and sceptical",
+      "Amused",
+      "Completely unrelated to the proposal"
     ],
     "correctIndex": 1,
-    "explanation": "Concise notes in your own words support understanding and recall.",
+    "explanation": "The writer points out missing evidence, signalling caution rather than accepting the promises at face value.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "plus-one-math-skill-1",
     "classId": "plus-one",
     "subjectId": "mathematics",
-    "skillTag": "addition",
-    "difficulty": "foundation",
-    "prompt": "What is 18 + 16?",
+    "skillTag": "function-evaluation",
+    "difficulty": "higher-secondary",
+    "prompt": "If f(x) = x² − 3x + 2, what is f(4)?",
     "options": [
-      "32",
-      "34",
-      "23",
-      "29"
+      "4",
+      "5",
+      "6",
+      "8"
     ],
-    "correctIndex": 1,
-    "explanation": "18 + 16 = 34.",
+    "correctIndex": 2,
+    "explanation": "Substitute x = 4: f(4) = 16 − 12 + 2 = 6.",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "plus-one-math-skill-2",
     "classId": "plus-one",
     "subjectId": "mathematics",
-    "skillTag": "subtraction",
-    "difficulty": "foundation",
-    "prompt": "What is 31 − 19?",
+    "skillTag": "trigonometric-ratios",
+    "difficulty": "higher-secondary",
+    "prompt": "If sin θ = 3/5 and θ is acute, what is cos θ?",
     "options": [
-      "12",
-      "23",
-      "39",
-      "8"
+      "2/5",
+      "3/4",
+      "4/5",
+      "5/4"
     ],
-    "correctIndex": 0,
-    "explanation": "The difference is 31 − 19 = 12.",
+    "correctIndex": 2,
+    "explanation": "Using a 3–4–5 right triangle, the adjacent side is 4 and the hypotenuse is 5, so cos θ = 4/5.",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "plus-one-math-skill-3",
     "classId": "plus-one",
     "subjectId": "mathematics",
-    "skillTag": "multiplication",
-    "difficulty": "developing",
-    "prompt": "A set has 11 groups with 3 items in each group. How many items are there?",
+    "skillTag": "equation-of-a-line",
+    "difficulty": "higher-secondary",
+    "prompt": "A line has slope −2 and passes through (2, 3). Which is its equation?",
     "options": [
-      "14",
-      "33",
-      "22",
-      "3"
+      "y = 2x − 1",
+      "y = −2x + 7",
+      "y = −2x − 1",
+      "y = 3x − 2"
     ],
     "correctIndex": 1,
-    "explanation": "Equal groups are multiplied: 11 × 3 = 33.",
+    "explanation": "Use y − 3 = −2(x − 2). Expanding gives y − 3 = −2x + 4, hence y = −2x + 7.",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "plus-one-math-skill-4",
     "classId": "plus-one",
     "subjectId": "mathematics",
-    "skillTag": "word-problems",
-    "difficulty": "developing",
-    "prompt": "Which expression means “11 more than 10”?",
+    "skillTag": "combinations",
+    "difficulty": "higher-secondary",
+    "prompt": "How many different pairs can be selected from 5 distinct students?",
     "options": [
-      "1",
-      "110",
-      "21",
-      "0.9090909090909091"
+      "5",
+      "10",
+      "15",
+      "20"
     ],
-    "correctIndex": 2,
-    "explanation": "“More than” means addition: 10 + 11.",
+    "correctIndex": 1,
+    "explanation": "The number of pairs is ⁵C₂ = 5 × 4 ÷ 2 = 10.",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "plus-one-math-skill-5",
     "classId": "plus-one",
     "subjectId": "mathematics",
-    "skillTag": "time-management-math",
-    "difficulty": "application",
-    "prompt": "A learner studies for 55 minutes and then another 10 minutes. How many minutes in total?",
+    "skillTag": "probability-independent-events",
+    "difficulty": "higher-secondary",
+    "prompt": "Two fair coins are tossed. What is the probability of getting exactly one head?",
     "options": [
-      "55",
-      "60",
-      "65",
-      "21"
+      "1/4",
+      "1/2",
+      "3/4",
+      "1"
     ],
-    "correctIndex": 2,
-    "explanation": "Add both study periods: 55 + 10 = 65 minutes.",
+    "correctIndex": 1,
+    "explanation": "The equally likely outcomes are HH, HT, TH and TT. Two of the four outcomes have exactly one head, so the probability is 2/4 = 1/2.",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "plus-one-literacy-skill-1",
     "classId": "plus-one",
     "subjectId": "english",
-    "skillTag": "main-idea",
-    "difficulty": "foundation",
-    "prompt": "Which sentence gives the main idea of a paragraph?",
+    "skillTag": "figurative-language",
+    "difficulty": "higher-secondary",
+    "prompt": "What figure of speech appears in “The city never sleeps”?",
     "options": [
-      "A detail mentioned once",
-      "The central point the paragraph explains",
-      "The longest sentence",
-      "The final word"
+      "Simile",
+      "Personification",
+      "Onomatopoeia",
+      "Oxymoron"
     ],
     "correctIndex": 1,
-    "explanation": "The main idea is the central point; supporting details explain it.",
+    "explanation": "The city is described as if it were a person capable of sleeping, which is personification.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "plus-one-literacy-skill-2",
     "classId": "plus-one",
     "subjectId": "english",
-    "skillTag": "context-clues",
-    "difficulty": "foundation",
-    "prompt": "Which is the best way to infer a word's meaning while reading?",
+    "skillTag": "evidence-quality",
+    "difficulty": "higher-secondary",
+    "prompt": "Which evidence most strongly supports the claim that a school garden can improve science learning?",
     "options": [
-      "Ignore the whole sentence",
-      "Use surrounding clues and then verify",
-      "Always choose the shortest meaning",
-      "Guess without rereading"
+      "One student says gardening is fun.",
+      "A poster says gardens are wonderful.",
+      "A controlled study compares science assessments before and after a garden programme with results from a similar class.",
+      "A social-media post has many likes."
     ],
-    "correctIndex": 1,
-    "explanation": "Context clues help form a sensible meaning, which should be checked if possible.",
+    "correctIndex": 2,
+    "explanation": "A comparison using defined learning measures provides stronger evidence than an isolated opinion or popularity.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "plus-one-literacy-skill-3",
     "classId": "plus-one",
     "subjectId": "english",
-    "skillTag": "clear-writing",
-    "difficulty": "developing",
-    "prompt": "Which sentence is clearest for formal school writing?",
+    "skillTag": "punctuation",
+    "difficulty": "higher-secondary",
+    "prompt": "Choose the correctly punctuated sentence.",
     "options": [
-      "Thing was good and stuff",
-      "The experiment showed a clear change in temperature.",
-      "It was like, you know, different",
-      "Very very very different"
+      "The experiment failed, however the data remained useful.",
+      "The experiment failed; however, the data remained useful.",
+      "The experiment failed however; the data remained useful.",
+      "The experiment; failed, however the data remained useful."
     ],
     "correctIndex": 1,
-    "explanation": "Specific wording communicates the observation clearly and precisely.",
+    "explanation": "A semicolon can link two independent clauses; “however” is followed by a comma in this construction.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "plus-one-literacy-skill-4",
     "classId": "plus-one",
     "subjectId": "english",
-    "skillTag": "source-checking",
-    "difficulty": "developing",
-    "prompt": "What should you do before sharing a factual claim online?",
+    "skillTag": "vocabulary-in-context",
+    "difficulty": "higher-secondary",
+    "prompt": "“Wireless internet is ubiquitous in the city: it is available in nearly every café, library and station.” What does “ubiquitous” mean?",
     "options": [
-      "Share it immediately",
-      "Check the source and compare reliable references",
-      "Trust the headline only",
-      "Assume a picture proves it"
+      "Rare",
+      "Widespread",
+      "Temporary",
+      "Expensive"
     ],
     "correctIndex": 1,
-    "explanation": "Check the original source, date and corroborating evidence before sharing.",
+    "explanation": "The examples show that wireless internet is present in many places, so “ubiquitous” means widespread.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "plus-one-literacy-skill-5",
     "classId": "plus-one",
     "subjectId": "english",
-    "skillTag": "revision-strategy",
-    "difficulty": "application",
-    "prompt": "What makes a useful revision note?",
+    "skillTag": "fact-and-opinion",
+    "difficulty": "higher-secondary",
+    "prompt": "Which statement is mainly an opinion?",
     "options": [
-      "Copying every sentence",
-      "A short summary in your own words with key terms",
-      "Only highlighting the page",
-      "Writing without checking meaning"
+      "The book contains twelve chapters.",
+      "The author published the novel in 2022.",
+      "The novel is the most inspiring book of the decade.",
+      "The final chapter begins on page 211."
     ],
-    "correctIndex": 1,
-    "explanation": "Concise notes in your own words support understanding and recall.",
+    "correctIndex": 2,
+    "explanation": "“Most inspiring” is a subjective judgement that cannot be established by the factual details alone.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "plus-two-math-skill-1",
     "classId": "plus-two",
     "subjectId": "mathematics",
-    "skillTag": "addition",
-    "difficulty": "foundation",
-    "prompt": "What is 19 + 17?",
+    "skillTag": "derivatives",
+    "difficulty": "higher-secondary",
+    "prompt": "For f(x) = x³ − 6x² + 9x, what is f′(2)?",
     "options": [
-      "34",
-      "36",
-      "24",
-      "31"
+      "−3",
+      "0",
+      "3",
+      "9"
     ],
-    "correctIndex": 1,
-    "explanation": "19 + 17 = 36.",
+    "correctIndex": 0,
+    "explanation": "Differentiate: f′(x) = 3x² − 12x + 9. At x = 2, f′(2) = 12 − 24 + 9 = −3.",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "plus-two-math-skill-2",
     "classId": "plus-two",
     "subjectId": "mathematics",
-    "skillTag": "subtraction",
-    "difficulty": "foundation",
-    "prompt": "What is 32 − 20?",
+    "skillTag": "indefinite-integrals",
+    "difficulty": "higher-secondary",
+    "prompt": "Evaluate ∫(2x + 3) dx.",
     "options": [
-      "12",
-      "24",
-      "40",
-      "8"
+      "2x² + 3 + C",
+      "x² + 3x + C",
+      "x² + 3 + C",
+      "2 + 3x + C"
     ],
-    "correctIndex": 0,
-    "explanation": "The difference is 32 − 20 = 12.",
+    "correctIndex": 1,
+    "explanation": "Integrate each term: ∫2x dx = x² and ∫3 dx = 3x. Include the constant C.",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "plus-two-math-skill-3",
     "classId": "plus-two",
     "subjectId": "mathematics",
-    "skillTag": "multiplication",
-    "difficulty": "developing",
-    "prompt": "A set has 12 groups with 3 items in each group. How many items are there?",
+    "skillTag": "determinants",
+    "difficulty": "higher-secondary",
+    "prompt": "What is the determinant of the matrix [[2, 1], [5, 3]]?",
     "options": [
-      "15",
-      "36",
-      "24",
-      "3"
+      "−1",
+      "1",
+      "6",
+      "11"
     ],
     "correctIndex": 1,
-    "explanation": "Equal groups are multiplied: 12 × 3 = 36.",
+    "explanation": "For a 2×2 matrix, the determinant is ad − bc = (2 × 3) − (1 × 5) = 1.",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "plus-two-math-skill-4",
     "classId": "plus-two",
     "subjectId": "mathematics",
-    "skillTag": "word-problems",
-    "difficulty": "developing",
-    "prompt": "Which expression means “12 more than 10”?",
+    "skillTag": "vectors-dot-product",
+    "difficulty": "higher-secondary",
+    "prompt": "For vectors a = (2, −1) and b = (3, 4), what is a · b?",
     "options": [
+      "−2",
       "2",
-      "120",
-      "22",
-      "0.8333333333333334"
+      "6",
+      "10"
     ],
-    "correctIndex": 2,
-    "explanation": "“More than” means addition: 10 + 12.",
+    "correctIndex": 1,
+    "explanation": "The dot product is 2 × 3 + (−1) × 4 = 6 − 4 = 2.",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "plus-two-math-skill-5",
     "classId": "plus-two",
     "subjectId": "mathematics",
-    "skillTag": "time-management-math",
-    "difficulty": "application",
-    "prompt": "A learner studies for 60 minutes and then another 10 minutes. How many minutes in total?",
+    "skillTag": "binomial-probability",
+    "difficulty": "higher-secondary",
+    "prompt": "A fair coin is tossed three times. What is the probability of exactly two heads?",
     "options": [
-      "60",
-      "65",
-      "70",
-      "22"
+      "1/8",
+      "1/4",
+      "3/8",
+      "1/2"
     ],
     "correctIndex": 2,
-    "explanation": "Add both study periods: 60 + 10 = 70 minutes.",
+    "explanation": "There are ³C₂ = 3 ways to choose which two tosses are heads. Each outcome has probability 1/8, giving 3/8.",
     "syllabusAligned": false,
-    "verification": "answer-key-auto-checked"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "plus-two-literacy-skill-1",
     "classId": "plus-two",
     "subjectId": "english",
-    "skillTag": "main-idea",
-    "difficulty": "foundation",
-    "prompt": "Which sentence gives the main idea of a paragraph?",
+    "skillTag": "logical-fallacies",
+    "difficulty": "higher-secondary",
+    "prompt": "A student says, “One graduate found a job after taking this course, so the course guarantees employment for every student.” What is the main flaw?",
     "options": [
-      "A detail mentioned once",
-      "The central point the paragraph explains",
-      "The longest sentence",
-      "The final word"
+      "A hasty generalisation from limited evidence",
+      "A mathematical proof",
+      "A definition",
+      "A comparison of equal samples"
     ],
-    "correctIndex": 1,
-    "explanation": "The main idea is the central point; supporting details explain it.",
+    "correctIndex": 0,
+    "explanation": "One person's outcome is not enough evidence to guarantee the same result for everyone.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "plus-two-literacy-skill-2",
     "classId": "plus-two",
     "subjectId": "english",
-    "skillTag": "context-clues",
-    "difficulty": "foundation",
-    "prompt": "Which is the best way to infer a word's meaning while reading?",
+    "skillTag": "academic-integrity",
+    "difficulty": "higher-secondary",
+    "prompt": "You want to include a finding from a research article in your essay. Which approach is best?",
     "options": [
-      "Ignore the whole sentence",
-      "Use surrounding clues and then verify",
-      "Always choose the shortest meaning",
-      "Guess without rereading"
+      "Copy the paragraph and omit the source.",
+      "Change two words and present it as your own.",
+      "Paraphrase the finding accurately in your own words and cite the source.",
+      "Cite a different article you have not read."
     ],
-    "correctIndex": 1,
-    "explanation": "Context clues help form a sensible meaning, which should be checked if possible.",
+    "correctIndex": 2,
+    "explanation": "Accurate paraphrasing with a citation gives credit and lets readers check the original source.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "plus-two-literacy-skill-3",
     "classId": "plus-two",
     "subjectId": "english",
-    "skillTag": "clear-writing",
-    "difficulty": "developing",
-    "prompt": "Which sentence is clearest for formal school writing?",
+    "skillTag": "complex-sentence-punctuation",
+    "difficulty": "higher-secondary",
+    "prompt": "Choose the sentence with correct punctuation.",
     "options": [
-      "Thing was good and stuff",
-      "The experiment showed a clear change in temperature.",
-      "It was like, you know, different",
-      "Very very very different"
+      "Although the sample was small the findings, were consistent.",
+      "Although the sample was small, the findings were consistent.",
+      "Although, the sample was small the findings were consistent.",
+      "Although the sample, was small, the findings were consistent."
     ],
     "correctIndex": 1,
-    "explanation": "Specific wording communicates the observation clearly and precisely.",
+    "explanation": "The comma follows the introductory dependent clause; the main clause then continues without an unnecessary comma.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "plus-two-literacy-skill-4",
     "classId": "plus-two",
     "subjectId": "english",
-    "skillTag": "source-checking",
-    "difficulty": "developing",
-    "prompt": "What should you do before sharing a factual claim online?",
+    "skillTag": "critical-tone",
+    "difficulty": "higher-secondary",
+    "prompt": "An editorial states: “The plan promises equal access, yet it sets no deadlines and identifies no funding.” Which tone is most evident?",
     "options": [
-      "Share it immediately",
-      "Check the source and compare reliable references",
-      "Trust the headline only",
-      "Assume a picture proves it"
+      "Uncritical celebration",
+      "Critical and questioning",
+      "Playful nostalgia",
+      "Indifference to evidence"
     ],
     "correctIndex": 1,
-    "explanation": "Check the original source, date and corroborating evidence before sharing.",
+    "explanation": "The contrast between promises and missing implementation details signals a critical, questioning tone.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   },
   {
     "id": "plus-two-literacy-skill-5",
     "classId": "plus-two",
     "subjectId": "english",
-    "skillTag": "revision-strategy",
-    "difficulty": "application",
-    "prompt": "What makes a useful revision note?",
+    "skillTag": "summary-writing",
+    "difficulty": "higher-secondary",
+    "prompt": "What should a good academic summary do?",
     "options": [
-      "Copying every sentence",
-      "A short summary in your own words with key terms",
-      "Only highlighting the page",
-      "Writing without checking meaning"
+      "Repeat every example and minor detail.",
+      "Add the writer’s personal opinion.",
+      "Preserve the source’s central claim and key evidence concisely.",
+      "Replace the source’s argument with a different one."
     ],
-    "correctIndex": 1,
-    "explanation": "Concise notes in your own words support understanding and recall.",
+    "correctIndex": 2,
+    "explanation": "A good summary is concise, accurate and faithful to the original central claim and main supporting evidence.",
     "syllabusAligned": false,
-    "verification": "answer-key-reviewed"
+    "verification": "original-practice-answer-checked"
   }
 ];
 export const STARTER_LIBRARY_STATS = {
