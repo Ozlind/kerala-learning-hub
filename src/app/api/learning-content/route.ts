@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 import { STARTER_MODULES, STARTER_QUESTIONS } from "@/data/starter-learning-library";
+import { OFFICIAL_LEARNING_SOURCES } from "@/data/official-learning-sources";
 
 export const revalidate = 3600;
+
+const sourceById = new Map(
+  OFFICIAL_LEARNING_SOURCES.map((source) => [source.id, source]),
+);
 
 const validClasses = new Set([
   ...Array.from({ length: 10 }, (_, index) => `class-${index + 1}`),
@@ -45,6 +50,12 @@ export function GET(request: Request) {
         miniLesson: module.miniLesson,
         activities: module.activities,
         reviewChecklist: module.reviewChecklist,
+        ageAppropriateGuidance: module.ageAppropriateGuidance,
+        sourceIds: module.sourceIds,
+        sources: module.sourceIds.flatMap((sourceId) => {
+          const source = sourceById.get(sourceId);
+          return source ? [source] : [];
+        }),
       }));
 
     return NextResponse.json(
