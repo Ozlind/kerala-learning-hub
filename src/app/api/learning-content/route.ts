@@ -5,7 +5,7 @@ import { OFFICIAL_LEARNING_SOURCES } from "@/data/official-learning-sources";
 export const revalidate = 3600;
 
 const sourceById = new Map(
-  OFFICIAL_LEARNING_SOURCES.map((source) => [source.id, source]),
+  OFFICIAL_LEARNING_SOURCES.map((source) => [source.id, source] as const),
 );
 
 const validClasses = new Set([
