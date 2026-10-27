@@ -11454,7 +11454,7 @@ export const STARTER_QUESTIONS: StarterQuestion[] = [
     "subjectId": "english",
     "skillTag": "punctuation",
     "difficulty": "higher-secondary",
-    "prompt": "Choose the correctly punctuated sentence.",
+    "prompt": "Which sentence correctly uses a semicolon before the transition “however”?",
     "options": [
       "The experiment failed, however the data remained useful.",
       "The experiment failed; however, the data remained useful.",
