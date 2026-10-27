@@ -141,7 +141,7 @@ if (Array.isArray(questions)) {
       if (new Set(normalized).size !== normalized.length) errors.push(ctx + ": answer options contain duplicates");
       if (!Number.isInteger(item.correctIndex) || item.correctIndex < 0 || item.correctIndex >= item.options.length) errors.push(ctx + ": correctIndex is outside the options array");
     }
-    if (!["answer-key-auto-checked", "answer-key-reviewed"].includes(item.verification)) errors.push(ctx + ": unknown answer-key verification status");
+    if (!["answer-key-auto-checked", "answer-key-reviewed", "original-practice-answer-checked"].includes(item.verification)) errors.push(ctx + ": unknown answer-key verification status");
   }
   for (const classId of classLabels.keys()) {
     if (!questionClasses.has(classId)) errors.push("No practice-question coverage for " + classId);
