@@ -167,7 +167,7 @@ const seniorEnglishQuestions = questions.filter(
 assert.equal(seniorMathQuestions.length, 25, "Each of Classes 8–10 and Plus One/Plus Two needs five tailored mathematics questions");
 assert.equal(seniorEnglishQuestions.length, 25, "Each of Classes 8–10 and Plus One/Plus Two needs five tailored English questions");
 
-const elementaryMathPrompt = /^(?:what is \d+\s*[+\-−]\s*\d+\\?|a set has \d+ groups|which expression means .*more than 10|a learner studies for \d+ minutes)/i;
+const elementaryMathPrompt = /^(?:what is \d+\s*[+\-−]\s*\d+\?|a set has \d+ groups|which expression means .*more than 10|a learner studies for \d+ minutes)/i;
 for (const question of seniorMathQuestions) {
   assert.ok(question.skillTag && question.skillTag !== "basic-arithmetic", `Use a meaningful skillTag for ${question.id}`);
   assert.ok(
