@@ -50,6 +50,36 @@ async function main() {
     }
     console.log("PASS homepage returns HTTP 200 and product branding.");
 
+    const manifestResponse = await request("/manifest.webmanifest");
+    const manifest = await manifestResponse.json();
+    if (!manifestResponse.ok || manifest.name !== "Kerala Learning Hub" ||
+        manifest.start_url !== "/" || !Array.isArray(manifest.icons) || manifest.icons.length === 0) {
+      throw new Error("Web app manifest is missing required product metadata.");
+    }
+    console.log("PASS web app manifest is served and has app metadata.");
+
+    const serviceWorkerResponse = await request("/sw.js");
+    const serviceWorker = await serviceWorkerResponse.text();
+    if (!serviceWorkerResponse.ok || !serviceWorker.includes("klh-learning-api-v1") ||
+        !serviceWorker.includes("/offline.html")) {
+      throw new Error("Offline service worker is missing its learning-content or fallback strategy.");
+    }
+    console.log("PASS offline service worker is served.");
+
+    const offlineResponse = await request("/offline.html");
+    const offlineHtml = await offlineResponse.text();
+    if (!offlineResponse.ok || !offlineHtml.includes("Let’s reconnect.")) {
+      throw new Error("Friendly offline fallback page is missing.");
+    }
+    console.log("PASS offline fallback page is served.");
+
+    const iconResponse = await request("/icon.svg");
+    const iconSvg = await iconResponse.text();
+    if (!iconResponse.ok || !iconSvg.includes("<svg")) {
+      throw new Error("App icon is missing or invalid.");
+    }
+    console.log("PASS lightweight app icon is served.");
+
     const modulesResponse = await request("/api/learning-content?classId=class-1&subjectId=mathematics&type=modules");
     const modulesPayload = await modulesResponse.json();
     if (!modulesResponse.ok || !Array.isArray(modulesPayload.modules) || modulesPayload.modules.length === 0) {
