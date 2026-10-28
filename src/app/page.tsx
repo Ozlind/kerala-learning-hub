@@ -78,7 +78,7 @@ export default function Home(){
  const [tasks,setTasks]=useState<StudyTask[]>([]); const [revised,setRevised]=useState<Record<string,string[]>>({});
  const [hydrated,setHydrated]=useState(false); const [tool,setTool]=useState<"planner"|"revision"|"focus"|"topics"|"quiz"|null>(null);
  const [newTask,setNewTask]=useState(""); const [focusSeconds,setFocusSeconds]=useState(25*60); const [focusRunning,setFocusRunning]=useState(false); const [focusMinutes,setFocusMinutes]=useState(0);
- const [subjectSearch,setSubjectSearch]=useState(""); const [topicSubject,setTopicSubject]=useState("Mathematics"); const [customTopicInput,setCustomTopicInput]=useState(""); const [customTopics,setCustomTopics]=useState<Record<string,Record<string,string[]>>>({}); const [quizIndex,setQuizIndex]=useState(0); const [quizAnswers,setQuizAnswers]=useState<Record<number,number>>({}); const [toast,setToast]=useState("");
+ const [subjectSearch,setSubjectSearch]=useState(""); const [topicSubject,setTopicSubject]=useState("Mathematics"); const [customTopicInput,setCustomTopicInput]=useState(""); const [customTopics,setCustomTopics]=useState<Record<string,Record<string,string[]>>>({}); const [quizIndex,setQuizIndex]=useState(0); const [quizAnswers,setQuizAnswers]=useState<Record<number,number>>({}); const [toast,setToast]=useState(""); const [offlinePackBusy,setOfflinePackBusy]=useState(false); const [offlinePackProgress,setOfflinePackProgress]=useState(0); const [offlinePackMessage,setOfflinePackMessage]=useState("");
  const modalRef=useRef<HTMLElement|null>(null);
  const [libraryModules,setLibraryModules]=useState<StarterModulePreview[]>([]);
  const [libraryQuestions,setLibraryQuestions]=useState<StarterQuestionPreview[]>([]);
@@ -116,6 +116,36 @@ export default function Home(){
  function addCustomTopic(){const topic=customTopicInput.trim();if(!topic){notify("Enter a topic name first.");return;}const existing=customTopics[selected]?.[topicSubject]??[];if(existing.some(t=>t.toLocaleLowerCase()===topic.toLocaleLowerCase())||(subjects.find(s=>s.name===topicSubject)?.topics??[]).some(t=>t.toLocaleLowerCase()===topic.toLocaleLowerCase())){notify("That topic is already listed.");return;}setCustomTopics(prev=>({...prev,[selected]:{...(prev[selected]??{}),[topicSubject]:[...(prev[selected]?.[topicSubject]??[]),topic]}}));setCustomTopicInput("");notify("Your custom topic was saved for this class on this device.");}
  function toggleRevision(topic:string){setRevised(prev=>{const current=prev[selected]??[];return {...prev,[selected]:current.includes(topic)?current.filter(x=>x!==topic):[...current,topic]};});}
  function resetFocus(){setFocusRunning(false);setFocusSeconds(25*60);}
+ async function prepareOfflinePack(){
+  if(offlinePackBusy)return;
+  const classId=libraryClassIdFor(selected);
+  const classLabel=chosen.title;
+  if(!window.confirm(`Save all currently available starter lessons and quiz questions for ${classLabel} on this device? This downloads content using your internet data once. It is not a complete or syllabus-verified textbook pack.`))return;
+  if(!("caches" in window)){setOfflinePackMessage("Offline saving is not supported by this browser.");return;}
+  setOfflinePackBusy(true);setOfflinePackProgress(0);setOfflinePackMessage("");
+  const total=subjects.length*2;
+  try{
+   const cache=await caches.open("klh-learning-api-v1");
+   let completed=0;
+   for(const subject of subjects){
+    const subjectId=librarySubjectIds[subject.name];
+    for(const type of ["modules","questions"] as const){
+     const params=new URLSearchParams({classId,subjectId,type});
+     const requestUrl=new URL(`/api/learning-content?${params.toString()}`,window.location.origin).toString();
+     const response=await fetch(requestUrl,{cache:"no-store"});
+     if(!response.ok)throw new Error("A learning resource could not be downloaded.");
+     const payload=await response.clone().json() as LearningContentResponse;
+     const validPayload=type==="modules"?Array.isArray(payload.modules):Array.isArray(payload.questions);
+     if(!validPayload)throw new Error("A learning resource returned an unexpected format.");
+     await cache.put(requestUrl,response.clone());
+     completed+=1;setOfflinePackProgress(completed);
+    }
+   }
+   setOfflinePackMessage(`Offline pack ready: available starter lessons and quizzes for ${classLabel} are saved in this browser. Browser storage can still be cleared by device settings.`);
+  }catch{
+   setOfflinePackMessage("The offline pack could not be completed. Some resources may be saved; reconnect and try again.");
+  }finally{setOfflinePackBusy(false);}
+ }
  function exportStudyData(){
   const backup={format:"kerala-learning-hub-backup",version:1,exportedAt:new Date().toISOString(),selectedClass:selected,tasks,revised,focusMinutes,customTopics};
   const blob=new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});
@@ -174,7 +204,7 @@ export default function Home(){
    <div className="filter-row" role="group" aria-label="Filter by school level">{filters.map(f=><button key={f} className={`filter-chip ${filter===f?"active":""}`} onClick={()=>setFilter(f)}>{f}</button>)}</div>
    <div className="class-grid">{filtered.length?filtered.map(c=><button key={c.id} className={`class-card ${selected===c.id?"selected":""}`} onClick={()=>{setSelected(c.id);notify(`${c.title} selected. Your study tools will use this class.`)}} aria-pressed={selected===c.id}><div className="card-top"><span className="class-number">{c.title}</span><span className="class-bubble">{c.icon}</span></div><p>{c.detail}</p><div className="card-bottom"><span>{c.phase}</span><strong>{selected===c.id?"Selected":"Choose"} <ArrowRight size={12} style={{verticalAlign:"middle"}}/></strong></div></button>):<div className="empty-state">No matching classes. Try another search or choose “All classes”.</div>}</div>
   </section>
-  <section className="section" id="my-learning" style={{paddingTop:0}}><div className="section-head"><div><div className="section-kicker">Your personal study space</div><h2>Make today count.</h2><p className="section-sub">Your tasks and revision checks stay saved on this device.</p></div><div className="learning-actions"><span className="pill-btn" style={{pointerEvents:"none"}}><GraduationCap size={15}/> {chosen.title}</span><button className="pill-btn" onClick={exportStudyData}><Download size={14}/> Export backup</button><label className="pill-btn import-backup"><Upload size={14}/> Import backup<input type="file" accept="application/json,.json" aria-label="Import study backup JSON file" onChange={importStudyData}/></label></div></div>
+  <section className="section" id="my-learning" style={{paddingTop:0}}><div className="section-head"><div><div className="section-kicker">Your personal study space</div><h2>Make today count.</h2><p className="section-sub">Your tasks and revision checks stay saved on this device.</p></div><div className="learning-actions"><span className="pill-btn" style={{pointerEvents:"none"}}><GraduationCap size={15}/> {chosen.title}</span><button className="pill-btn" onClick={exportStudyData}><Download size={14}/> Export backup</button><button className="pill-btn" onClick={prepareOfflinePack} disabled={offlinePackBusy}><Download size={14}/> {offlinePackBusy?`Saving ${offlinePackProgress}/12`:"Save class offline"}</button><label className="pill-btn import-backup"><Upload size={14}/> Import backup<input type="file" accept="application/json,.json" aria-label="Import study backup JSON file" onChange={importStudyData}/></label>{offlinePackMessage&&<span role="status" aria-live="polite" style={{flexBasis:"100%",fontSize:12,lineHeight:1.5,color:"var(--muted)"}}>{offlinePackMessage}</span>}</div></div>
    <div className="learning-grid"><article className="learning-panel"><div className="panel-head"><span className="panel-icon"><NotebookPen size={19}/></span><div><h3>Study planner</h3><p>Keep the next step manageable.</p></div><button className="icon-btn" aria-label="Open planner" onClick={()=>handleTool("planner")}><ArrowRight size={17}/></button></div><div className="stat-line"><strong>{classTasks.filter(t=>!t.done).length}</strong><span>tasks left for {chosen.title}</span></div><div className="progress-track"><span style={{width:`${progress}%`}}/></div><div className="progress-caption"><span>{doneTasks} of {classTasks.length} completed</span><span>{progress}% complete</span></div><button className="panel-action" onClick={()=>handleTool("planner")}>Open your planner <ChevronRight size={15}/></button></article>
     <article className="learning-panel"><div className="panel-head"><span className="panel-icon warm"><CheckCircle2 size={19}/></span><div><h3>Revision checklist</h3><p>Review topics as you go.</p></div><button className="icon-btn" aria-label="Open revision checklist" onClick={()=>handleTool("revision")}><ArrowRight size={17}/></button></div><div className="stat-line"><strong>{revisionCount}<small> / {starterTopics.length}</small></strong><span>starter revision ideas checked</span></div><div className="progress-track"><span style={{width:`${revisionCount/starterTopics.length*100}%`}}/></div><div className="progress-caption"><span>Keep it steady</span><span>{Math.round(revisionCount/starterTopics.length*100)}% checked</span></div><button className="panel-action" onClick={()=>handleTool("revision")}>Review checklist <ChevronRight size={15}/></button></article>
     <article className="learning-panel focus-panel"><div className="panel-head"><span className="panel-icon lavender"><Timer size={19}/></span><div><h3>Focus session</h3><p>One goal. A little quiet time.</p></div><button className="icon-btn" aria-label="Open focus timer" onClick={()=>handleTool("focus")}><ArrowRight size={17}/></button></div><div className="focus-stat"><strong>{Math.floor(focusMinutes/60)}h {focusMinutes%60}m</strong><span>focused time completed on this device</span></div><button className="panel-action" onClick={()=>handleTool("focus")}>Start a 25-minute session <ChevronRight size={15}/></button></article></div>
