@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { COMMUNITY_LEARNING_SOURCES } from "@/data/community-learning-sources";
 import Link from "next/link";
 import { ArrowUpRight, BookOpen, CheckCircle2, FileText, Languages, LibraryBig, NotebookPen, ShieldCheck } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Textbooks & Notes Library | Kerala Learning Hub",
-  description: "Find official Kerala SCERT and Samagra textbook sources, plus original short notes, detailed explanations and practice resources for Classes 1–12.",
+  description: "Class-wise Kerala learning resources, original notes and practice materials organized for in-app study across Classes 1–12.",
 };
 
 const classes = [
@@ -22,7 +23,7 @@ const classes = [
   { id: "plus-two", label: "Plus Two", stage: "Higher secondary" },
 ];
 
-const sources = [
+const officialSources = [
   {
     title: "Samagra — Official Digital Textbooks",
     detail: "KITE Kerala’s textbook portal. Choose the standard, subject, medium and book edition available there.",
@@ -61,6 +62,11 @@ const sources = [
   },
 ];
 
+const sources = [
+  ...officialSources.map((source) => ({ ...source, provider: "SCERT / KITE Kerala", resourceTypes: ["Official textbooks", "Digital learning"], status: "discovery-only" as const })),
+  ...COMMUNITY_LEARNING_SOURCES,
+];
+
 const noteFormats = [
   { title: "Quick short notes", detail: "Key ideas, definitions, formulas and facts for fast revision.", icon: FileText },
   { title: "Detailed notes", detail: "Original explanations, worked examples, diagrams described in words and step-by-step reasoning.", icon: NotebookPen },
@@ -81,20 +87,20 @@ export default function LibraryPage() {
         <h1>One place to find your <em>next lesson.</em></h1>
         <p>Start with the official textbook for your class, then use original notes, clear explanations and practice to build understanding.</p>
         <div className="resource-hero-actions">
-          <a className="resource-primary" href="https://samagra.kite.kerala.gov.in/#/textbook/page" target="_blank" rel="noreferrer">Open official textbooks <ArrowUpRight size={16} /></a>
+          <a className="resource-primary" href="#official-sources-title">Browse indexed learning resources <BookOpen size={16} /></a>
           <Link className="resource-secondary" href="/#classes">Choose a class in Learning Hub</Link>
         </div>
-        <div className="resource-trust-note"><ShieldCheck size={16} /> Official book links open the publisher’s website. Edition and syllabus alignment must be checked per book.</div>
+        <div className="resource-trust-note"><ShieldCheck size={16} /> Study materials are being organized for in-app reading. Each item must pass edition and syllabus checks before being marked current.</div>
       </section>
 
       <section className="resource-section" aria-labelledby="class-library-title">
         <div className="resource-section-heading"><div><span>YOUR CLASS</span><h2>Choose where you are learning</h2></div><p>Classes 1–10 and Higher Secondary</p></div>
         <div className="resource-class-grid">
           {classes.map((item) => (
-            <a key={item.id} className="resource-class-card" href={item.id.startsWith("plus") ? "https://samagra.kite.kerala.gov.in/#/textbook/page" : "https://samagra.kite.kerala.gov.in/#/textbook/page"} target="_blank" rel="noreferrer">
+            <a key={item.id} className="resource-class-card" href="/#classes">
               <span className="resource-class-stage">{item.stage}</span>
               <strong>{item.label}</strong>
-              <span className="resource-class-link">Find textbooks <ArrowUpRight size={14} /></span>
+              <span className="resource-class-link">Open study space <BookOpen size={14} /></span>
             </a>
           ))}
         </div>
@@ -110,11 +116,11 @@ export default function LibraryPage() {
       </section>
 
       <section className="resource-section" aria-labelledby="official-sources-title">
-        <div className="resource-section-heading"><div><span>PRIMARY SOURCES</span><h2>Official textbook & learning portals</h2></div><p>External sites open separately</p></div>
+        <div className="resource-section-heading"><div><span>RESOURCE INDEX</span><h2>Learning materials organized for this app</h2></div><p>Source metadata guides original in-app content</p></div>
         <div className="resource-source-list">
-          {sources.map((source) => <article className="resource-source-card" key={source.title}><div className="resource-source-copy"><span className="resource-source-tag">{source.tag}</span><h3>{source.title}</h3><p>{source.detail}</p><a href={source.url} target="_blank" rel="noreferrer">Open source <ArrowUpRight size={14} /></a></div></article>)}
+          {sources.map((source) => <article className="resource-source-card" key={source.title}><div className="resource-source-copy"><span className="resource-source-tag">{"tag" in source ? source.tag : source.audience}</span><h3>{source.title}</h3><p>{"detail" in source ? source.detail : source.notes}</p><p className="resource-source-provider">{source.provider}</p><span className="resource-source-status">Indexed for original study content · not a copied lesson</span></div></article>)}
         </div>
-        <p className="resource-copyright-note">Textbook pages remain on their official host. Kerala Learning Hub links to these sources and creates its own explanations and practice materials rather than republishing complete copyrighted books.</p>
+        <p className="resource-copyright-note">These sites are used as discovery references for class, subject and topic coverage. Students stay inside Kerala Learning Hub; we author original explanations and questions instead of copying full notes or copyrighted textbook pages.</p>
       </section>
 
       <footer className="resource-footer"><Link href="/">← Return to Kerala Learning Hub</Link><span>Study clearly. Revise confidently.</span></footer>
