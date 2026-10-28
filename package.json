@@ -10,7 +10,8 @@
     "validate:content": "node scripts/validate-learning-content.mjs",
     "test": "npm run test:content",
     "test:content": "node scripts/validate-learning-library.mjs",
-    "verify": "npm run test:content && npm run validate:content && npm run lint && npm run build"
+    "test:api": "node scripts/test-learning-content-api.mjs",
+    "verify": "npm run test:content && npm run validate:content && npm run lint && npm run build && npm run test:api"
   },
   "dependencies": {
     "next": "^15.5.10",
