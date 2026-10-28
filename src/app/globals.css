@@ -44,7 +44,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .quiz-option{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:13px 14px;border:1px solid var(--line);border-radius:13px;background:var(--surface);color:var(--ink);font:inherit;cursor:pointer}
 .quiz-option>span{display:grid;place-items:center;flex:0 0 28px;height:28px;border-radius:9px;background:var(--surface-muted,var(--cream));font-size:12px;font-weight:800}
 .quiz-option strong{margin-left:auto;font-size:11px}
-.quiz-option.selected.correct{border-color:#39835d;background:#edf7ef}
+.quiz-option.correct:not(.selected){border-color:#39835d;background:#edf7ef}.quiz-option.selected.correct{border-color:#39835d;background:#edf7ef}
 .quiz-option.selected.incorrect{border-color:#c66b61;background:#fff0ed}
 .quiz-option:disabled{cursor:default}
 .quiz-explanation{margin-top:16px;padding:15px;border-radius:14px;background:#eef5ef;border:1px solid #d5e7d8}
