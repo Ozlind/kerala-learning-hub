@@ -90,3 +90,19 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .topic-divider:before,.topic-divider:after{content:"";height:1px;background:#e5e9e1;flex:1}
 .library-error{margin:8px 0 12px;padding:10px 12px;border-radius:10px;background:#fff6e8;color:#855f25;font-size:12px;line-height:1.5}
 @media(max-width:540px){.library-detail{padding:14px}.library-detail-heading{display:grid}.library-detail-heading .pill-btn{justify-self:start}.library-detail-grid{grid-template-columns:1fr}.library-module{padding:11px}}
+
+
+/* Saved quiz history */
+.quiz-history-panel{margin-top:14px}
+.quiz-history-empty{margin:18px 0 2px;color:var(--muted);font-size:12px;line-height:1.7}
+.quiz-history-summary{display:flex;align-items:baseline;gap:10px;margin-top:18px}
+.quiz-history-summary strong{font-family:Manrope,sans-serif;font-size:29px;letter-spacing:-1px;color:var(--green)}
+.quiz-history-summary span{font-size:12px;color:var(--muted)}
+.quiz-history-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:14px}
+.quiz-history-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 13px;border:1px solid #e7ebe4;border-radius:13px;background:#fbfcf9;min-width:0}
+.quiz-history-item>div{display:grid;gap:4px;min-width:0}
+.quiz-history-item strong{font-size:12px;overflow-wrap:anywhere}
+.quiz-history-item small{font-size:10px;color:var(--muted);font-weight:500}
+.quiz-history-item>span{text-align:right;white-space:nowrap;font-size:12px;font-weight:800}
+.quiz-history-item>span small{display:block;margin-top:3px}
+@media(max-width:600px){.quiz-history-list{grid-template-columns:1fr}}
