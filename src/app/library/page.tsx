@@ -118,7 +118,7 @@ export default function LibraryPage() {
       <section className="resource-section" aria-labelledby="official-sources-title">
         <div className="resource-section-heading"><div><span>RESOURCE INDEX</span><h2>Learning materials organized for this app</h2></div><p>Source metadata guides original in-app content</p></div>
         <div className="resource-source-list">
-          {sources.map((source) => <article className="resource-source-card" key={source.title}><div className="resource-source-copy"><span className="resource-source-tag">{"tag" in source ? source.tag : source.audience}</span><h3>{source.title}</h3><p>{"detail" in source ? source.detail : source.notes}</p><p className="resource-source-provider">{ "provider" in source ? source.provider : source.authority }</p><span className="resource-source-status">Indexed for original study content · not a copied lesson</span></div></article>)}
+          {sources.map((source) => <article className="resource-source-card" key={source.title}><div className="resource-source-copy"><span className="resource-source-tag">{"tag" in source ? source.tag : source.audience}</span><h3>{source.title}</h3><p>{"detail" in source ? source.detail : source.notes}</p><p className="resource-source-provider">{source.provider}</p><span className="resource-source-status">Indexed for original study content · not a copied lesson</span></div></article>)}
         </div>
         <p className="resource-copyright-note">These sites are used as discovery references for class, subject and topic coverage. Students stay inside Kerala Learning Hub; we author original explanations and questions instead of copying full notes or copyrighted textbook pages.</p>
       </section>
