@@ -15,9 +15,9 @@ concurrency:
 
 jobs:
   validate:
-    name: TypeScript and production build
+    name: TypeScript, content, build and smoke tests
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     env:
       NEXT_TELEMETRY_DISABLED: "1"
     steps:
@@ -28,6 +28,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
@@ -43,3 +44,6 @@ jobs:
 
       - name: Build production app
         run: npm run build
+
+      - name: Smoke-test built production server and learning APIs
+        run: npm run smoke
