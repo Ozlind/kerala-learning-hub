@@ -1,0 +1,14 @@
+import http from 'node:http';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { Store } from './store.js';
+import { OperatorEngine } from './engine.js';
+import { createHandler } from './server.js';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const store=new Store(path.join(root,'data'));
+const engine=new OperatorEngine(store);
+const server=http.createServer(createHandler(store,engine));
+const scheduler=setInterval(async()=>{const now=Date.now();for(const item of store.read().schedules.filter(x=>x.enabled&&Date.parse(x.nextRunAt)<=now)){store.updateSchedule(item.id,{nextRunAt:new Date(now+item.everyMinutes*60000).toISOString(),lastRunAt:new Date().toISOString()});try{await engine.run(item.goal)}catch(error){store.audit({type:'schedule_error',id:item.id,message:error.message})}}},30000);
+scheduler.unref();
+const port=Number(process.env.PORT||8787);
+server.listen(port,'127.0.0.1',()=>process.stdout.write(`AI Studio Operator listening on http://127.0.0.1:${port}\n`));

@@ -1,0 +1,16 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import os from 'node:os';
+import path from 'node:path';
+import {Readable} from 'node:stream';
+import fs from 'node:fs';
+import {Store} from '../src/store.js';
+import {OperatorEngine} from '../src/engine.js';
+import {createHandler} from '../src/server.js';
+import {encryptJson,decryptJson} from '../src/secrets.js';
+const temp=()=>fs.mkdtempSync(path.join(os.tmpdir(),'operator-sec-'));
+function req(method,url,{body,headers={}}={}){const r=Readable.from(body===undefined?[]:[JSON.stringify(body)]);r.method=method;r.url=url;r.headers={host:'operator.example',...headers};r.socket={remoteAddress:'127.0.0.1'};return r;}
+function res(){return {statusCode:200,headers:{},body:'',writeHead(code,headers){this.statusCode=code;this.headers=headers;return this;},end(body=''){this.body=Buffer.isBuffer(body)?body.toString():String(body);return this;}};}
+test('provider secrets encrypt at rest and reject tampering',()=>{const key='ab'.repeat(32),sealed=encryptJson({groqApiKey:'secret-value'},key);assert.equal(JSON.stringify(sealed).includes('secret-value'),false);assert.deepEqual(decryptJson(sealed,key),{groqApiKey:'secret-value'});assert.throws(()=>decryptJson({...sealed,data:Buffer.from('bad').toString('base64')},key));});
+test('public API signs an HttpOnly owner session and rejects anonymous requests',async()=>{const oldToken=process.env.OPERATOR_ACCESS_TOKEN,oldKey=process.env.OPERATOR_ENCRYPTION_KEY;process.env.OPERATOR_ACCESS_TOKEN='owner-token';process.env.OPERATOR_ENCRYPTION_KEY='cd'.repeat(32);try{const store=new Store(path.join(temp(),'data')),handler=createHandler(store,new OperatorEngine(store),{publicMode:true});const denied=res();await handler(req('GET','/api/tasks'),denied);assert.equal(denied.statusCode,401);const login=res();await handler(req('POST','/api/login',{body:{token:'owner-token'}}),login);assert.equal(login.statusCode,200);assert.match(login.headers['Set-Cookie'],/HttpOnly/);assert.match(login.headers['Set-Cookie'],/SameSite=Strict/);const cookie=login.headers['Set-Cookie'].split(';')[0];const session=res();await handler(req('GET','/api/session',{headers:{cookie}}),session);assert.deepEqual(JSON.parse(session.body),{authenticated:true});}finally{if(oldToken===undefined)delete process.env.OPERATOR_ACCESS_TOKEN;else process.env.OPERATOR_ACCESS_TOKEN=oldToken;if(oldKey===undefined)delete process.env.OPERATOR_ENCRYPTION_KEY;else process.env.OPERATOR_ENCRYPTION_KEY=oldKey;}});
+test('Cloudflare is not configured until both account ID and token exist',()=>{const names=['AI_PROVIDER_ORDER','CLOUDFLARE_API_TOKEN','CLOUDFLARE_ACCOUNT_ID'];const old=Object.fromEntries(names.map(k=>[k,process.env[k]]));process.env.AI_PROVIDER_ORDER='cloudflare';process.env.CLOUDFLARE_API_TOKEN='token';delete process.env.CLOUDFLARE_ACCOUNT_ID;try{const engine=new OperatorEngine(new Store(path.join(temp(),'data')));assert.deepEqual(engine.providers(),[]);process.env.CLOUDFLARE_ACCOUNT_ID='account';assert.deepEqual(engine.providers(),['cloudflare']);}finally{for(const k of names)if(old[k]===undefined)delete process.env[k];else process.env[k]=old[k];}});

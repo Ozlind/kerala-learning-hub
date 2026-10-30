@@ -4,6 +4,15 @@
   "private": true,
   "description": "A local-first AI operator with planning, tool execution, persistent memory and safety gates.",
   "type": "module",
-  "scripts": {"start":"node src/server.js", "test":"node --test", "check":"node --check src/server.js && node --check src/engine.js && node --check src/store.js && node --check src/env.js && node --check public/app.js"},
-  "engines": {"node": ">=20"}
+  "scripts": {
+    "start": "node src/local.js",
+    "test": "node --test",
+    "check": "node --check src/server.js && node --check src/local.js && node --check api/index.js && node --check src/secrets.js && node --check src/engine.js && node --check src/store.js && node --check src/env.js && node --check public/app.js"
+  },
+  "engines": {
+    "node": "24.x"
+  },
+  "dependencies": {
+    "@vercel/blob": "2.3.0"
+  }
 }

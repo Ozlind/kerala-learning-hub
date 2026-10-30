@@ -43,17 +43,19 @@ export const toolDefinitions = [
 
 const providerSpecs = {
   ollama: { label: 'Ollama (local)', modelEnv: 'OLLAMA_MODEL', defaultModel: 'qwen2.5:3b', keyEnv: null, endpoint: null },
-  gemini: { label: 'Google AI Studio', modelEnv: 'GEMINI_MODEL', defaultModel: 'gemini-2.5-flash', keyEnv: 'GEMINI_API_KEY', endpoint: 'https://generativelanguage.googleapis.com/v1beta' },
+  gemini: { label: 'Google AI Studio', modelEnv: 'GEMINI_MODEL', defaultModel: 'gemini-3.6-flash', keyEnv: 'GEMINI_API_KEY', endpoint: 'https://generativelanguage.googleapis.com/v1beta' },
   groq: { label: 'Groq', modelEnv: 'GROQ_MODEL', defaultModel: 'openai/gpt-oss-20b', keyEnv: 'GROQ_API_KEY', endpoint: 'https://api.groq.com/openai/v1' },
-  cerebras: { label: 'Cerebras', modelEnv: 'CEREBRAS_MODEL', defaultModel: 'llama3.1-8b', keyEnv: 'CEREBRAS_API_KEY', endpoint: 'https://api.cerebras.ai/v1' },
+  mistral: { label: 'Mistral (Free mode)', modelEnv: 'MISTRAL_MODEL', defaultModel: 'mistral-small-latest', keyEnv: 'MISTRAL_API_KEY', endpoint: 'https://api.mistral.ai/v1' },
+  cloudflare: { label: 'Cloudflare Workers AI', modelEnv: 'CLOUDFLARE_MODEL', defaultModel: '@cf/zai-org/glm-4.7-flash', keyEnv: 'CLOUDFLARE_API_TOKEN', accountEnv: 'CLOUDFLARE_ACCOUNT_ID', endpoint: null },
   openrouter: { label: 'OpenRouter (free models only)', modelEnv: 'OPENROUTER_MODEL', defaultModel: 'openrouter/free', keyEnv: 'OPENROUTER_API_KEY', endpoint: 'https://openrouter.ai/api/v1' }
 };
 
 function providerOrder() {
-  const requested = (process.env.AI_PROVIDER_ORDER || 'ollama,gemini,groq,cerebras,openrouter').split(',').map(x => x.trim().toLowerCase()).filter(x => providerSpecs[x]);
+  const defaultOrder = process.env.VERCEL ? 'gemini,groq,mistral,cloudflare,openrouter' : 'ollama,gemini,groq,mistral,cloudflare,openrouter';
+  const requested = (process.env.AI_PROVIDER_ORDER || defaultOrder).split(',').map(x => x.trim().toLowerCase()).filter(x => providerSpecs[x]);
   return [...new Set(requested)];
 }
-function providerConfigured(name) { const spec = providerSpecs[name]; return name === 'ollama' || Boolean(spec?.keyEnv && process.env[spec.keyEnv]); }
+function providerConfigured(name) { const spec = providerSpecs[name]; if (name === 'ollama') return true; if (!spec?.keyEnv || !process.env[spec.keyEnv]) return false; return !spec.accountEnv || Boolean(process.env[spec.accountEnv]); }
 function providerModel(name) { const spec = providerSpecs[name]; return process.env[spec.modelEnv] || spec.defaultModel; }
 function toOpenAIMessages(input, system) {
   return [{ role: 'system', content: system }, ...input.map(item => {
@@ -83,7 +85,7 @@ export class OperatorEngine {
     return {
       engine: 'local-first-free-only', provider: this.provider(), model: providerModel(this.provider()), modelConfigured: this.providers().some(name => name !== 'ollama'), localProvider: 'availability_checked_separately',
       providers,
-      integrations: { ollama: 'local_service_not_yet_verified', gemini: Boolean(process.env.GEMINI_API_KEY), groq: Boolean(process.env.GROQ_API_KEY), cerebras: Boolean(process.env.CEREBRAS_API_KEY), openrouter: Boolean(process.env.OPENROUTER_API_KEY), githubReadOnly: 'public_api_available', githubAuthenticated: Boolean(process.env.GITHUB_TOKEN), openMeteo: 'free_no_key', frankfurter: 'free_no_key', meteredSearch: 'disabled_by_free_only_policy', paidProviders: 'disabled', browserAutomation: 'external_connector_only', cloudDeploy: 'approval_required' },
+      integrations: { ollama: 'local_service_not_yet_verified', gemini: Boolean(process.env.GEMINI_API_KEY), groq: Boolean(process.env.GROQ_API_KEY), mistral: Boolean(process.env.MISTRAL_API_KEY), cloudflare: Boolean(process.env.CLOUDFLARE_API_TOKEN && process.env.CLOUDFLARE_ACCOUNT_ID), openrouter: Boolean(process.env.OPENROUTER_API_KEY), githubReadOnly: 'public_api_available', githubAuthenticated: Boolean(process.env.GITHUB_TOKEN), openMeteo: 'free_no_key', frankfurter: 'free_no_key', meteredSearch: 'disabled_by_free_only_policy', paidProviders: 'disabled', browserAutomation: 'external_connector_only', cloudDeploy: 'approval_required' },
       runs: state.runs.length, memories: state.memories.length, pendingApprovals: state.approvals.filter(x => x.status === 'pending').length, schedules: state.schedules.filter(x => x.enabled).length
     };
   }
@@ -123,9 +125,10 @@ export class OperatorEngine {
       return { provider, message: { role: 'assistant', content: parts.filter(part => part.text).map(part => part.text).join('\n'), ...(toolCalls.length ? { tool_calls: toolCalls } : {}) }, calls };
     }
     const spec = providerSpecs[provider];
+    const endpoint = provider === 'cloudflare' ? `https://api.cloudflare.com/client/v4/accounts/${encodeURIComponent(process.env.CLOUDFLARE_ACCOUNT_ID)}/ai/v1` : spec.endpoint;
     const headers = { Authorization: `Bearer ${process.env[spec.keyEnv]}`, 'Content-Type': 'application/json' };
     if (provider === 'openrouter') { headers['HTTP-Referer'] = 'http://127.0.0.1:8787'; headers['X-Title'] = 'AI Studio Operator'; }
-    const response = await this.fetch(`${spec.endpoint}/chat/completions`, { method: 'POST', signal: timeoutSignal(), headers, body: JSON.stringify({ model, messages: toOpenAIMessages(input, system), tools: toolDefinitions.map(t => ({ type: 'function', function: { name: t.name, description: t.description, parameters: t.parameters, strict: true } })), tool_choice: 'auto', parallel_tool_calls: false, temperature: 0.2, max_tokens: 2048 }) });
+    const response = await this.fetch(`${endpoint}/chat/completions`, { method: 'POST', signal: timeoutSignal(), headers, body: JSON.stringify({ model, messages: toOpenAIMessages(input, system), tools: toolDefinitions.map(t => ({ type: 'function', function: { name: t.name, description: t.description, parameters: t.parameters, strict: true } })), tool_choice: 'auto', parallel_tool_calls: false, temperature: 0.2, max_tokens: 2048 }) });
     const payload = await response.json(); if (!response.ok) throw new Error(payload.error?.message || `${provider} API error ${response.status}`);
     const message = payload.choices?.[0]?.message || {};
     return { provider, message: { role: 'assistant', content: message.content || '', ...(message.tool_calls?.length ? { tool_calls: message.tool_calls } : {}) }, calls: (message.tool_calls || []).map(c => ({ id: c.id, name: c.function.name, arguments: c.function.arguments || '{}' })) };

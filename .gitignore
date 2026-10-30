@@ -8,3 +8,7 @@ data/state.json
 data/audit.jsonl
 *.log
 .DS_Store
+
+.vercel/
+.next/
+*.zip
