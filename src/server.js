@@ -25,7 +25,7 @@ export function createHandler(store, engine, { publicMode = false, getProviderSe
     const cookie=req.headers.cookie||'',value=cookie.split(';').map(x=>x.trim()).find(x=>x.startsWith('operator_session='))?.slice(17);
     if(!value)return false;
     const [expires,signature]=value.split('.');
-    if(!/^\\d+$/.test(expires||'')||Number(expires)<Date.now()||!signature)return false;
+    if(!/^\d+$/.test(expires||'')||Number(expires)<Date.now()||!signature)return false;
     const secret=process.env.OPERATOR_ENCRYPTION_KEY||'';if(!secret)return false;
     const expected=crypto.createHmac('sha256',secret).update(expires).digest('hex'),a=Buffer.from(signature),b=Buffer.from(expected);
     return a.length===b.length&&crypto.timingSafeEqual(a,b);
