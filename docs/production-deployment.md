@@ -4,7 +4,7 @@ The production build is gated by `npm run check && npm test`. Vercel installs de
 
 Required Vercel Production secrets:
 - `OPERATOR_ACCESS_TOKEN`
-- `OPERATOR_ENCRYPTION_KEY` (64 hex characters)
+- `OPERATOR_ENCRYPTION_KEY` is optional; the backend derives it from the private Blob token with HKDF when omitted.
 - `BLOB_READ_WRITE_TOKEN` (linked private Blob store)
 
 Free model providers are optional and must be configured by the owner in the encrypted provider vault. Do not commit API keys or add provider credentials to GitHub Actions.

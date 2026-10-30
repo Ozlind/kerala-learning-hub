@@ -32,8 +32,8 @@ Official setup: [Gemini](https://aistudio.google.com/app/apikey) · [Groq](https
 Production uses a static UI from `public/`, a Node.js function at `api/index.js`, and a private Vercel Blob store in Singapore (`sin1`) for persistent state.
 
 Required encrypted Vercel environment variables:
-- `OPERATOR_ACCESS_TOKEN` — owner login secret.
-- `OPERATOR_ENCRYPTION_KEY` — 64 hex characters (32 random bytes) for AES-256-GCM.
+- `OPERATOR_ACCESS_TOKEN` — owner login secret (required).
+- `OPERATOR_ENCRYPTION_KEY` — optional 64-hex-character key. If omitted, a key is derived with HKDF from the private Blob token.
 - `BLOB_READ_WRITE_TOKEN` is attached automatically when the private Blob store is linked.
 
 Sign in through the in-app login gate. Add your own provider keys in **Connect AI services**; they are encrypted server-side before being saved in private Blob. The browser never receives saved key values. Sessions expire after 12 hours.

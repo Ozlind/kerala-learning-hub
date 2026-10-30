@@ -17,7 +17,7 @@
 ## Production
 Vercel-ൽ `public/` static UI, `api/index.js` backend, private Vercel Blob persistence എന്നിവയാണ് ഉപയോഗിക്കുന്നത്. Owner login gate ഉണ്ട്. AI provider keys ഔദ്യോഗിക dashboard-ൽ നിന്ന് നീ തന്നെ സൃഷ്ടിച്ച് sign-in ചെയ്തശേഷം **Connect AI services** panel-ൽ നൽകാം. Keys server-side AES-256-GCM ഉപയോഗിച്ച് encrypt ചെയ്താണ് private Blob-ൽ സൂക്ഷിക്കുന്നത്.
 
-`OPERATOR_ACCESS_TOKEN`, `OPERATOR_ENCRYPTION_KEY` എന്നിവ Vercel encrypted environment variables ആണ്. `BLOB_READ_WRITE_TOKEN` private Blob store link ചെയ്താൽ സ്വയം ലഭിക്കും.
+`OPERATOR_ACCESS_TOKEN` Vercel encrypted environment variable ആയി ചേർക്കണം. `OPERATOR_ENCRYPTION_KEY` optional ആണ്; ഇല്ലെങ്കിൽ private Blob token-ൽ നിന്ന് HKDF വഴി key derive ചെയ്യും. `BLOB_READ_WRITE_TOKEN` private Blob store link ചെയ്താൽ സ്വയം ലഭിക്കും.
 
 Production schedules background-ൽ പ്രവർത്തിക്കില്ല; recurring schedules local mode-ൽ മാത്രമാണ്. Free quotas തീർന്നാൽ paid upgrade സ്വയം നടക്കില്ല.
 

@@ -2,6 +2,7 @@ import './env.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { getEncryptionKey } from './secrets.js';
 import { fileURLToPath } from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -26,7 +27,7 @@ export function createHandler(store, engine, { publicMode = false, getProviderSe
     if(!value)return false;
     const [expires,signature]=value.split('.');
     if(!/^\d+$/.test(expires||'')||Number(expires)<Date.now()||!signature)return false;
-    const secret=process.env.OPERATOR_ENCRYPTION_KEY||'';if(!secret)return false;
+    const secret=getEncryptionKey();
     const expected=crypto.createHmac('sha256',secret).update(expires).digest('hex'),a=Buffer.from(signature),b=Buffer.from(expected);
     return a.length===b.length&&crypto.timingSafeEqual(a,b);
   }
@@ -40,7 +41,7 @@ export function createHandler(store, engine, { publicMode = false, getProviderSe
     if(!allowedRequest(req))return send(res,403,{error:'Cross-origin request blocked.'});
     const url=new URL(req.url,'http://localhost');
     const routePath=url.pathname==='/api/index'&&url.searchParams.has('__route')?`/api${url.searchParams.get('__route')}`:url.pathname;
-    if(req.method==='GET'&&routePath==='/api/session')return send(res,200,{authenticated:!publicMode||validSession(req)});
+    if(req.method==='GET'&&routePath==='/api/session')return send(res,200,{authenticated:!publicMode||validSession(req),configured:!publicMode||Boolean(process.env.OPERATOR_ACCESS_TOKEN)});
     if(req.method==='POST'&&routePath==='/api/login'){
       if(!publicMode)return send(res,200,{authenticated:true});
       if(rateLimited(req,loginRate,8))return send(res,429,{error:'Too many login attempts. Wait one minute.'});
@@ -48,7 +49,7 @@ export function createHandler(store, engine, { publicMode = false, getProviderSe
       const body=await readBody(req),supplied=String(body.token||'');
       const valid=supplied.length<=200&&crypto.timingSafeEqual(crypto.createHash('sha256').update(supplied).digest(),crypto.createHash('sha256').update(expected).digest());
       if(!valid)return send(res,401,{error:'Incorrect access key.'});
-      const expires=String(Date.now()+12*60*60*1000),signature=crypto.createHmac('sha256',process.env.OPERATOR_ENCRYPTION_KEY||'').update(expires).digest('hex');
+      const expires=String(Date.now()+12*60*60*1000),signature=crypto.createHmac('sha256',getEncryptionKey()).update(expires).digest('hex');
       const secure=req.headers['x-forwarded-proto']==='https'||process.env.NODE_ENV==='production';
       return send(res,200,{authenticated:true},'application/json; charset=utf-8',{'Set-Cookie':`operator_session=${expires}.${signature}; Path=/; HttpOnly; SameSite=Strict; Max-Age=43200${secure?'; Secure':''}`});
     }
