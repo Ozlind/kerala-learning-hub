@@ -1,0 +1,10 @@
+.env
+.env.*
+!.env.example
+node_modules/
+workspace/*
+!workspace/.gitkeep
+data/state.json
+data/audit.jsonl
+*.log
+.DS_Store
