@@ -55,3 +55,4 @@ The backend uses ETag-conditional Blob writes to avoid silently overwriting conc
 npm run check
 npm test
 ```
+\n\n### OpenAI API (optional, metered)\n\nOpenAI is supported through the official `https://api.openai.com/v1/chat/completions` endpoint. Its key is encrypted in the private provider vault. It is excluded from routing by default and only becomes eligible when the owner explicitly enables **Allow metered OpenAI requests** in the provider settings. API billing is separate from ChatGPT; `store: false` is sent and each completion is capped at 1,024 output tokens. Do not enable it without accepting the account's API charges.\n
