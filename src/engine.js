@@ -78,13 +78,12 @@ function toGeminiContents(input) {
 export class OperatorEngine {
   constructor(store, fetchImpl = fetch) { this.store = store; this.fetch = fetchImpl; this.lastRunAt = 0; }
   providers() { return providerOrder().filter(providerConfigured); }
-  provider() { return this.providers()[0] || null; }
+  provider() { return this.providers()[0] || 'ollama'; }
   status() {
     const state = this.store.read();
-    const activeProvider = this.provider();
     const providers = providerOrder().map(name => ({ id: name, name: providerSpecs[name].label, model: providerModel(name), configured: providerConfigured(name), mode: name === 'ollama' ? 'local' : 'free-tier-key-required' }));
     return {
-      engine: 'local-first-free-only', provider: activeProvider || 'none', model: activeProvider ? providerModel(activeProvider) : 'not configured', modelConfigured: this.providers().some(name => name !== 'ollama'), localProvider: 'availability_checked_separately',
+      engine: 'local-first-free-only', provider: this.provider(), model: providerModel(this.provider()), modelConfigured: this.providers().some(name => name !== 'ollama'), localProvider: 'availability_checked_separately',
       providers,
       integrations: { ollama: 'local_service_not_yet_verified', gemini: Boolean(process.env.GEMINI_API_KEY), groq: Boolean(process.env.GROQ_API_KEY), mistral: Boolean(process.env.MISTRAL_API_KEY), cloudflare: Boolean(process.env.CLOUDFLARE_API_TOKEN && process.env.CLOUDFLARE_ACCOUNT_ID), openrouter: Boolean(process.env.OPENROUTER_API_KEY), githubReadOnly: 'public_api_available', githubAuthenticated: Boolean(process.env.GITHUB_TOKEN), openMeteo: 'free_no_key', frankfurter: 'free_no_key', meteredSearch: 'disabled_by_free_only_policy', paidProviders: 'disabled', browserAutomation: 'external_connector_only', cloudDeploy: 'approval_required' },
       runs: state.runs.length, memories: state.memories.length, pendingApprovals: state.approvals.filter(x => x.status === 'pending').length, schedules: state.schedules.filter(x => x.enabled).length
@@ -156,7 +155,7 @@ export class OperatorEngine {
   }
   async requestModel(input, system, excluded = []) {
     const candidates = this.providers().filter(name => !excluded.includes(name));
-    if (!candidates.length) throw new Error(process.env.VERCEL ? 'No remote free-tier AI provider is configured. Add a provider key in Connect AI services. Paid providers are disabled.' : 'No AI provider is configured. Start Ollama or add a free-tier provider key. Paid providers are disabled.');
+    if (!candidates.length) throw new Error('No free AI provider is configured. Start Ollama or add a free-tier API key in .env. Paid providers are disabled.');
     const failures = [];
     for (const provider of candidates) {
       try {
@@ -191,7 +190,7 @@ export class OperatorEngine {
   async run(goal) {
     if (typeof goal !== 'string' || !goal.trim() || goal.length > 8000) throw new Error('Goal must contain 1–8000 characters.');
     const minimumGap = Number(process.env.MIN_RUN_INTERVAL_MS || 3000); if (Date.now() - this.lastRunAt < minimumGap) throw new Error('Please wait a few seconds before starting another run.'); this.lastRunAt = Date.now();
-    const run = { id: id(), goal: goal.trim(), startedAt: new Date().toISOString(), provider: this.provider() || 'none', providersUsed: [], status: 'running', steps: [], summary: '' };
+    const run = { id: id(), goal: goal.trim(), startedAt: new Date().toISOString(), provider: this.provider(), providersUsed: [], status: 'running', steps: [], summary: '' };
     const system = `You are AI Studio Operator, an exacting autonomous software/product operator. Work only inside the isolated operator workspace using provided tools. GitHub tool is read-only. Never claim access to browser, Vercel, Supabase or cloud systems unless explicitly confirmed. Never reveal secrets. Destructive actions, public deployment, spending, production writes and external communications are prohibited. Request approval for such actions; never execute them. Plan briefly, execute low-risk work, verify results, and report completed versus blocked work precisely.`;
     let input = [{ role: 'user', content: goal.trim() }];
     try {

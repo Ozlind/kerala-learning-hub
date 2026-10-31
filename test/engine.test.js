@@ -181,7 +181,7 @@ test('provider router skips a provider that returns an empty successful response
   }finally{if(oldOrder===undefined)delete process.env.AI_PROVIDER_ORDER;else process.env.AI_PROVIDER_ORDER=oldOrder;if(oldGroq===undefined)delete process.env.GROQ_API_KEY;else process.env.GROQ_API_KEY=oldGroq;if(oldMistral===undefined)delete process.env.MISTRAL_API_KEY;else process.env.MISTRAL_API_KEY=oldMistral;}
 });
 
-test('hosted status never presents unavailable local Ollama as an active provider',()=>{
+test('hosted status never presents unavailable local Ollama as an active provider',async()=>{
   const oldOrder=process.env.AI_PROVIDER_ORDER,oldVercel=process.env.VERCEL,oldKeys=['GEMINI_API_KEY','GROQ_API_KEY','MISTRAL_API_KEY','CLOUDFLARE_API_TOKEN','CLOUDFLARE_ACCOUNT_ID','OPENROUTER_API_KEY'].map(key=>[key,process.env[key]]);
   process.env.VERCEL='1';process.env.AI_PROVIDER_ORDER='gemini,groq,mistral,cloudflare,openrouter';
   for(const key of ['GEMINI_API_KEY','GROQ_API_KEY','MISTRAL_API_KEY','CLOUDFLARE_API_TOKEN','CLOUDFLARE_ACCOUNT_ID','OPENROUTER_API_KEY'])delete process.env[key];
@@ -189,8 +189,8 @@ test('hosted status never presents unavailable local Ollama as an active provide
     const engine=new OperatorEngine(new Store(path.join(temp(),'data')));
     const status=engine.status();
     assert.equal(status.provider,'none');assert.equal(status.model,'not configured');assert.equal(status.modelConfigured,false);
-    assert.match(status.integrations.paidProviders,/disabled/);
-    assert.match(engine.requestModel([{role:'user',content:'hello'}],'system').catch(error=>error.message),/Promise/);
+    assert.equal(status.integrations.paidProviders,'disabled');
+    await assert.rejects(()=>engine.requestModel([{role:'user',content:'hello'}],'system'),/No remote free-tier AI provider is configured/);
   }finally{
     if(oldOrder===undefined)delete process.env.AI_PROVIDER_ORDER;else process.env.AI_PROVIDER_ORDER=oldOrder;
     if(oldVercel===undefined)delete process.env.VERCEL;else process.env.VERCEL=oldVercel;
