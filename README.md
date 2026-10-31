@@ -26,6 +26,7 @@ Official setup: [Gemini](https://aistudio.google.com/app/apikey) · [Groq](https
 
 - **Open-Meteo** weather/geocoding without a key (non-commercial hosted API; attribute the data).
 - **Frankfurter** reference exchange rates without a key.
+- **Wikipedia / MediaWiki API** public-knowledge search without a key; returns up to five short extracts and canonical article links. Treat it as background material and verify important claims against primary sources.
 
 ## Vercel deployment
 
