@@ -53,7 +53,7 @@ const providerSpecs = {
 
 function providerOrder() {
   const defaultOrder = process.env.VERCEL ? 'gemini,groq,mistral,cloudflare,openrouter,openai' : 'ollama,gemini,groq,mistral,cloudflare,openrouter,openai';
-  const requested = (process.env.AI_PROVIDER_ORDER || defaultOrder).split(',').map(x => x.trim().toLowerCase()).filter(x => providerSpecs[x] && (x !== 'openai' || process.env.OPENAI_API_ENABLED === 'true'));
+  const requested = (process.env.AI_PROVIDER_ORDER || defaultOrder).split(',').map(x => x.trim().toLowerCase()).filter(x => providerSpecs[x]);
   return [...new Set(requested)];
 }
 function providerConfigured(name) { const spec = providerSpecs[name]; if (name === 'ollama') return true; if (name === 'openai' && process.env.OPENAI_API_ENABLED !== 'true') return false; if (!spec?.keyEnv || !process.env[spec.keyEnv]) return false; return !spec.accountEnv || Boolean(process.env[spec.accountEnv]); }
@@ -83,7 +83,7 @@ export class OperatorEngine {
   status() {
     const state = this.store.read();
     const activeProvider = this.provider();
-    const providers = providerOrder().map(name => ({ id: name, name: providerSpecs[name].label, model: providerModel(name), configured: providerConfigured(name), mode: name === 'ollama' ? 'local' : 'free-tier-key-required' }));
+    const providers = providerOrder().map(name => ({ id: name, name: providerSpecs[name].label, model: providerModel(name), configured: providerConfigured(name), mode: name === 'ollama' ? 'local' : name === 'openai' ? 'metered-opt-in' : 'free-tier-key-required' }));
     return {
       engine: 'local-first-free-only', provider: activeProvider || 'none', model: activeProvider ? providerModel(activeProvider) : 'not configured', modelConfigured: this.providers().some(name => name !== 'ollama'), localProvider: 'availability_checked_separately',
       providers,
@@ -94,7 +94,7 @@ export class OperatorEngine {
   async checkProvider() {
     const results = [];
     for (const provider of providerOrder()) {
-      if (!providerConfigured(provider)) { results.push({ provider, configured: false, reachable: false, detail: `Add ${providerSpecs[provider].keyEnv} to enable this free-tier provider.` }); continue; }
+      if (!providerConfigured(provider)) { results.push({ provider, configured: false, reachable: false, detail: provider === 'openai' ? 'OpenAI is metered and disabled until you explicitly enable it.' : `Add ${providerSpecs[provider].keyEnv} to enable this free-tier provider.` }); continue; }
       if (provider === 'ollama') {
         try {
           const base = (process.env.OLLAMA_BASE_URL || 'http://127.0.0.1:11434').replace(/\/$/, '');
@@ -110,6 +110,7 @@ export class OperatorEngine {
 
   async testProvider(provider) {
     if (!providerSpecs[provider]) throw new Error('Unknown AI provider.');
+    if (provider === 'openai' && process.env.OPENAI_API_ENABLED !== 'true') return { provider, configured: false, ok: false, detail: 'OpenAI is disabled by default. Review API billing, then enable metered requests in provider settings.' };
     if (!providerConfigured(provider)) return { provider, configured: false, ok: false, detail: 'This provider is not configured. Save its credentials first.' };
     try {
       const result = await this.requestFromProvider(provider, [{ role: 'user', content: 'Reply with OK only.' }], 'This is a short connectivity test. Reply exactly OK and do not call tools.');

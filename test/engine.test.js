@@ -201,7 +201,7 @@ test('hosted status never presents unavailable local Ollama as an active provide
 test('OpenAI provider is disabled by default even when a real key is saved',()=>{
   const oldOrder=process.env.AI_PROVIDER_ORDER,oldKey=process.env.OPENAI_API_KEY,oldEnabled=process.env.OPENAI_API_ENABLED;
   process.env.AI_PROVIDER_ORDER='openai';process.env.OPENAI_API_KEY='test-openai-key';delete process.env.OPENAI_API_ENABLED;
-  try{const engine=new OperatorEngine(new Store(path.join(temp(),'data')));assert.deepEqual(engine.providers(),[]);assert.equal(engine.status().integrations.openai,false);assert.equal(engine.status().integrations.paidProviders,'disabled');}
+  try{const engine=new OperatorEngine(new Store(path.join(temp(),'data')));assert.deepEqual(engine.providers(),[]);assert.equal(engine.status().providers.find(x=>x.id==='openai').configured,false);assert.equal(engine.status().integrations.openai,false);assert.equal(engine.status().integrations.paidProviders,'disabled');}
   finally{if(oldOrder===undefined)delete process.env.AI_PROVIDER_ORDER;else process.env.AI_PROVIDER_ORDER=oldOrder;if(oldKey===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=oldKey;if(oldEnabled===undefined)delete process.env.OPENAI_API_ENABLED;else process.env.OPENAI_API_ENABLED=oldEnabled;}
 });
 test('OpenAI provider uses the official API endpoint and returns tool calls without exposing the key',async()=>{
@@ -217,4 +217,11 @@ test('OpenAI provider uses the official API endpoint and returns tool calls with
     assert.equal(request.body.store,false);assert.equal(request.body.max_completion_tokens,1024);
     assert.equal(JSON.stringify(result).includes('test-openai-key'),false);
   }finally{if(oldOrder===undefined)delete process.env.AI_PROVIDER_ORDER;else process.env.AI_PROVIDER_ORDER=oldOrder;if(oldKey===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=oldKey;if(oldEnabled===undefined)delete process.env.OPENAI_API_ENABLED;else process.env.OPENAI_API_ENABLED=oldEnabled;}
+});
+
+test('OpenAI explicit opt-in can be turned off after a key is stored',()=>{
+  const oldOrder=process.env.AI_PROVIDER_ORDER,oldKey=process.env.OPENAI_API_KEY,oldEnabled=process.env.OPENAI_API_ENABLED;
+  process.env.AI_PROVIDER_ORDER='openai';process.env.OPENAI_API_KEY='test-openai-key';process.env.OPENAI_API_ENABLED='true';
+  try{const engine=new OperatorEngine(new Store(path.join(temp(),'data')));assert.deepEqual(engine.providers(),['openai']);process.env.OPENAI_API_ENABLED='false';assert.deepEqual(engine.providers(),[]);assert.equal(engine.status().integrations.paidProviders,'disabled');}
+  finally{if(oldOrder===undefined)delete process.env.AI_PROVIDER_ORDER;else process.env.AI_PROVIDER_ORDER=oldOrder;if(oldKey===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=oldKey;if(oldEnabled===undefined)delete process.env.OPENAI_API_ENABLED;else process.env.OPENAI_API_ENABLED=oldEnabled;}
 });
