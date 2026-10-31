@@ -4,6 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {Readable} from 'node:stream';
 import fs from 'node:fs';
+import {spawnSync} from 'node:child_process';
 import {Store} from '../src/store.js';
 import {OperatorEngine} from '../src/engine.js';
 import {createHandler} from '../src/server.js';
@@ -16,3 +17,5 @@ test('public API signs an HttpOnly owner session and rejects anonymous requests'
 test('Cloudflare is not configured until both account ID and token exist',()=>{const names=['AI_PROVIDER_ORDER','CLOUDFLARE_API_TOKEN','CLOUDFLARE_ACCOUNT_ID'];const old=Object.fromEntries(names.map(k=>[k,process.env[k]]));process.env.AI_PROVIDER_ORDER='cloudflare';process.env.CLOUDFLARE_API_TOKEN='token';delete process.env.CLOUDFLARE_ACCOUNT_ID;try{const engine=new OperatorEngine(new Store(path.join(temp(),'data')));assert.deepEqual(engine.providers(),[]);process.env.CLOUDFLARE_ACCOUNT_ID='account';assert.deepEqual(engine.providers(),['cloudflare']);}finally{for(const k of names)if(old[k]===undefined)delete process.env[k];else process.env[k]=old[k];}});
 
 test('encryption key derives from private Blob token when no explicit key is configured',()=>{const oldKey=process.env.OPERATOR_ENCRYPTION_KEY,oldBlob=process.env.BLOB_READ_WRITE_TOKEN;delete process.env.OPERATOR_ENCRYPTION_KEY;process.env.BLOB_READ_WRITE_TOKEN='test-private-blob-token';try{const first=getEncryptionKey(),second=getEncryptionKey();assert.match(first,/^[a-f0-9]{64}$/);assert.equal(first,second);assert.notEqual(first,'test-private-blob-token');}finally{if(oldKey===undefined)delete process.env.OPERATOR_ENCRYPTION_KEY;else process.env.OPERATOR_ENCRYPTION_KEY=oldKey;if(oldBlob===undefined)delete process.env.BLOB_READ_WRITE_TOKEN;else process.env.BLOB_READ_WRITE_TOKEN=oldBlob;}});
+
+test('Vercel workspace defaults to a writable temporary directory',()=>{const script=`import fs from 'node:fs';process.env.VERCEL='1';delete process.env.OPERATOR_WORKSPACE;await import('./src/engine.js');fs.accessSync('/tmp/ai-studio-operator-workspace',fs.constants.W_OK);`;const result=spawnSync(process.execPath,['--input-type=module','-e',script],{cwd:process.cwd(),encoding:'utf8',env:{...process.env,VERCEL:'1',OPERATOR_WORKSPACE:''}});assert.equal(result.status,0,result.stderr||result.stdout);});

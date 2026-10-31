@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const id = () => crypto.randomUUID();
-const workspaceRoot = () => path.resolve(process.env.OPERATOR_WORKSPACE || 'workspace');
+const workspaceRoot = () => path.resolve(process.env.OPERATOR_WORKSPACE || (process.env.VERCEL ? '/tmp/ai-studio-operator-workspace' : 'workspace'));
 fs.mkdirSync(workspaceRoot(), { recursive: true });
 const timeoutSignal = () => AbortSignal.timeout(Number(process.env.PROVIDER_TIMEOUT_MS || 45000));
 
