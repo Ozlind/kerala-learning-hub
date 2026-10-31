@@ -144,3 +144,39 @@ test('notes can be edited and deleted independently',()=>{
   assert.equal(store.deleteNote('n1'),true);
   assert.equal(store.read().notes.length,0);
 });
+
+test('provider test performs a minimal live inference and never returns credentials',async()=>{
+  const oldOrder=process.env.AI_PROVIDER_ORDER,oldKey=process.env.GROQ_API_KEY;
+  process.env.AI_PROVIDER_ORDER='groq';process.env.GROQ_API_KEY='test-secret-key';
+  try{
+    let request;
+    const engine=new OperatorEngine(new Store(path.join(temp(),'data')),async(url,options)=>{request={url:String(url),body:JSON.parse(options.body)};return {ok:true,json:async()=>({choices:[{message:{role:'assistant',content:'OK'}}]})};});
+    const result=await engine.testProvider('groq');
+    assert.equal(result.ok,true);assert.equal(result.configured,true);assert.equal(result.model,'openai/gpt-oss-20b');
+    assert.equal(request.url,'https://api.groq.com/openai/v1/chat/completions');
+    assert.equal(request.body.messages.at(-1).content,'Reply with OK only.');
+    assert.equal(JSON.stringify(result).includes('test-secret-key'),false);
+  }finally{if(oldOrder===undefined)delete process.env.AI_PROVIDER_ORDER;else process.env.AI_PROVIDER_ORDER=oldOrder;if(oldKey===undefined)delete process.env.GROQ_API_KEY;else process.env.GROQ_API_KEY=oldKey;}
+});
+test('provider test gives a safe actionable failure for invalid credentials',async()=>{
+  const oldOrder=process.env.AI_PROVIDER_ORDER,oldKey=process.env.GROQ_API_KEY;
+  process.env.AI_PROVIDER_ORDER='groq';process.env.GROQ_API_KEY='invalid-key';
+  try{
+    const engine=new OperatorEngine(new Store(path.join(temp(),'data')),async()=>({ok:false,status:401,json:async()=>({error:{message:'Invalid API key'}})}));
+    const result=await engine.testProvider('groq');
+    assert.equal(result.ok,false);assert.match(result.detail,/Authentication failed/);
+    assert.equal(JSON.stringify(result).includes('invalid-key'),false);
+  }finally{if(oldOrder===undefined)delete process.env.AI_PROVIDER_ORDER;else process.env.AI_PROVIDER_ORDER=oldOrder;if(oldKey===undefined)delete process.env.GROQ_API_KEY;else process.env.GROQ_API_KEY=oldKey;}
+});
+test('provider router skips a provider that returns an empty successful response',async()=>{
+  const oldOrder=process.env.AI_PROVIDER_ORDER,oldGroq=process.env.GROQ_API_KEY,oldMistral=process.env.MISTRAL_API_KEY;
+  process.env.AI_PROVIDER_ORDER='groq,mistral';process.env.GROQ_API_KEY='test-groq';process.env.MISTRAL_API_KEY='test-mistral';
+  try{
+    const engine=new OperatorEngine(new Store(path.join(temp(),'data')),async url=>{
+      if(String(url).includes('groq.com'))return {ok:true,json:async()=>({choices:[{message:{role:'assistant',content:''}}]})};
+      return {ok:true,json:async()=>({choices:[{message:{role:'assistant',content:'Backup provider answered.'}}]})};
+    });
+    const result=await engine.requestModel([{role:'user',content:'hello'}],'system');
+    assert.equal(result.provider,'mistral');assert.equal(result.message.content,'Backup provider answered.');
+  }finally{if(oldOrder===undefined)delete process.env.AI_PROVIDER_ORDER;else process.env.AI_PROVIDER_ORDER=oldOrder;if(oldGroq===undefined)delete process.env.GROQ_API_KEY;else process.env.GROQ_API_KEY=oldGroq;if(oldMistral===undefined)delete process.env.MISTRAL_API_KEY;else process.env.MISTRAL_API_KEY=oldMistral;}
+});

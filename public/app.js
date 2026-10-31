@@ -11,7 +11,7 @@ async function refresh() {
   const s = health.status; $('#connection').textContent = health.ok ? '● Engine online' : 'Engine offline';
   $('#status').innerHTML = [metric('Provider',s.provider),metric('Model',s.model),metric('Remote API key',s.modelConfigured?'Present':'Not set'),metric('Saved runs',s.runs),metric('Memories',s.memories),metric('Pending approvals',s.pendingApprovals),metric('Active schedules',s.schedules),metric('GitHub API',s.integrations.githubReadOnly?'Public read-only':'Unavailable'),metric('Metered search','Disabled'),metric('Paid APIs','Disabled'),metric('Weather API',s.integrations.openMeteo?'Free · no key':'Unavailable'),metric('Currency API',s.integrations.frankfurter?'Free · no key':'Unavailable')].join('');
   $('#provider-health').textContent = `${health.providerCheck.reachable ? 'A provider is reachable.' : 'No provider reachability confirmed.'} ${health.providerCheck.detail}`;
-  $('#providers').innerHTML = (s.providers || []).map(provider => `<div class="provider-row"><div><strong>${escapeHtml(provider.name)}</strong><small>${escapeHtml(provider.model)} · ${provider.mode === 'local' ? 'Runs on this device' : 'Free-tier key required'}</small></div><span class="state ${provider.configured ? 'completed' : 'pending'}">${provider.configured ? (provider.id === 'ollama' ? 'Local · check health' : 'Key present · unverified') : 'Not configured'}</span></div>`).join('');
+  $('#providers').innerHTML = (s.providers || []).map(provider => `<div class="provider-row"><div><strong>${escapeHtml(provider.name)}</strong><small>${escapeHtml(provider.model)} · ${provider.mode === 'local' ? 'Runs on this device' : 'Free-tier key required'}</small></div><div class="provider-actions"><span class="state pending" data-provider-result="${provider.id}">${provider.configured ? (provider.id === 'ollama' ? 'Local · unverified' : 'Key saved · unverified') : 'Not configured'}</span><button class="quiet" type="button" data-provider-test="${provider.id}" ${provider.configured ? '' : 'disabled'}>Test</button></div></div>`).join('');
   $('#runs').innerHTML = runs.runs.length ? runs.runs.map(run=>`<article class="run"><div class="run-title"><strong>${escapeHtml(run.goal)}</strong><span class="state ${escapeHtml(run.status)}">${escapeHtml(run.status)}</span></div><small>${escapeHtml(run.startedAt)} · ${escapeHtml(run.provider)} · ${run.steps?.length||0} tool calls</small><p>${escapeHtml(run.summary)}</p></article>`).join('') : '<p class="muted">No runs yet. Your first verified task will appear here.</p>';
   $('#approvals').innerHTML = approvals.approvals.filter(x=>x.status==='pending').map(item=>`<article class="compact"><strong>${escapeHtml(item.action)}</strong><p>${escapeHtml(item.reason)}</p><small>${escapeHtml(item.createdAt)}</small><div class="actions"><button class="quiet" data-approval="${item.id}" data-status="rejected">Reject</button><button class="small-button" data-approval="${item.id}" data-status="approved">Approve record</button></div></article>`).join('') || '<p class="muted">Nothing waiting for a decision.</p>';
   $('#memories').innerHTML = memories.memories.slice(0,8).map(item=>`<article class="compact memory-item"><div><small>${escapeHtml(item.category)} · ${escapeHtml(item.at)}</small><p>${escapeHtml(item.content)}</p></div><button class="quiet" data-memory-delete="${item.id}" aria-label="Delete saved memory">Delete</button></article>`).join('') || '<p class="muted">Durable decisions saved by the operator appear here.</p>';
@@ -22,6 +22,26 @@ async function refresh() {
   const groups = [{key:'todo',label:'To do'},{key:'doing',label:'In progress'},{key:'done',label:'Done'}];
   $('#tasks').innerHTML = groups.map(group=>{const items=tasks.tasks.filter(task=>task.status===group.key);return `<section class="task-column"><h3>${group.label}<span>${items.length}</span></h3>${items.map(task=>`<article class="task-card"><div class="task-card-top"><strong>${escapeHtml(task.title)}</strong><span class="priority ${task.priority}">${escapeHtml(task.priority)}</span></div>${task.details?`<p>${escapeHtml(task.details)}</p>`:''}<div class="task-controls"><select aria-label="Task status" data-task-status="${task.id}"><option value="todo" ${task.status==='todo'?'selected':''}>To do</option><option value="doing" ${task.status==='doing'?'selected':''}>In progress</option><option value="done" ${task.status==='done'?'selected':''}>Done</option></select><button class="quiet" data-task-delete="${task.id}" aria-label="Delete ${escapeHtml(task.title)}">Delete</button></div></article>`).join('')||'<p class="empty-column">Nothing here yet.</p>'}</section>`}).join('');
 }
+document.addEventListener('click', async event => {
+  const button = event.target.closest('[data-provider-test]');
+  if (!button) return;
+  const provider = button.dataset.providerTest;
+  const status = document.querySelector(`[data-provider-result="${provider}"]`);
+  button.disabled = true;
+  button.textContent = 'Testing…';
+  status.textContent = 'Checking live inference…';
+  try {
+    const result = await api('/api/provider-check', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ provider }) });
+    status.textContent = result.detail;
+    status.className = `state ${result.ok ? 'completed' : 'failed'}`;
+  } catch (error) {
+    status.textContent = error.message;
+    status.className = 'state failed';
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Test';
+  }
+});
 $('#run').addEventListener('click', async()=>{const goal=$('#goal').value.trim();if(!goal)return;$('#run').disabled=true;$('#notice').textContent='Working through the task…';try{const result=await api('/api/run',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goal})});$('#notice').textContent=result.summary;$('#goal').value='';await refresh();}catch(error){$('#notice').textContent=error.message;}finally{$('#run').disabled=false;}});
 $('#refresh').addEventListener('click',()=>refresh().catch(error=>$('#connection').textContent=error.message));
 $('#add-schedule').addEventListener('click',async()=>{try{await api('/api/schedules',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goal:$('#schedule-goal').value,everyMinutes:Number($('#schedule-interval').value)})});$('#schedule-goal').value='';await refresh();}catch(error){$('#notice').textContent=error.message;}});

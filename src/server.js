@@ -64,6 +64,11 @@ export function createHandler(store, engine, { publicMode = false, getProviderSe
       if(!saveProviderSettings)return send(res,503,{error:'Provider key vault is not available.'});
       return send(res,200,await saveProviderSettings(await readBody(req)));
     }
+    if (req.method === 'POST' && routePath === '/api/provider-check') {
+      if (rateLimited(req, rate, 12)) return send(res, 429, { error: 'Too many connection tests. Wait one minute and retry.' });
+      const body = await readBody(req);
+      return send(res, 200, await engine.testProvider(String(body.provider || '')));
+    }
     if (req.method === 'GET' && routePath === '/api/runs') return send(res, 200, { runs:store.read().runs.slice(0,30) });
     if (req.method === 'GET' && routePath === '/api/memories') return send(res, 200, { memories:store.read().memories.slice(0,50) });
     if (req.method === 'DELETE' && routePath.startsWith('/api/memories/')) { const removed=store.deleteMemory(routePath.split('/').pop()); return removed?send(res,200,{deleted:true}):send(res,404,{error:'Memory not found.'}); }

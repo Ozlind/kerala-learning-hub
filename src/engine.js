@@ -105,6 +105,26 @@ export class OperatorEngine {
     const configured = results.some(x => x.configured);
     return { provider: this.provider(), providers: results, reachable, configured, detail: results.find(x => x.reachable === true)?.detail || results.find(x => x.configured && x.provider !== 'ollama')?.detail || results[0]?.detail || 'No provider configured. Start Ollama locally or add a free-tier API key.' };
   }
+
+  async testProvider(provider) {
+    if (!providerSpecs[provider]) throw new Error('Unknown AI provider.');
+    if (!providerConfigured(provider)) return { provider, configured: false, ok: false, detail: 'This provider is not configured. Save its credentials first.' };
+    try {
+      const result = await this.requestFromProvider(provider, [{ role: 'user', content: 'Reply with OK only.' }], 'This is a short connectivity test. Reply exactly OK and do not call tools.');
+      if (!result.message?.content?.trim() && !result.calls?.length) throw new Error('empty_response');
+      this.store.audit({ type: 'provider_connection_test', provider, ok: true });
+      return { provider, model: providerModel(provider), configured: true, ok: true, detail: 'Live inference succeeded. This provider is ready.' };
+    } catch (error) {
+      const message = String(error?.message || '').toLowerCase();
+      const detail = error?.name === 'TimeoutError' ? 'The provider timed out. Check its service status and retry.'
+        : /401|403|unauthorized|invalid.*key|api.?key/.test(message) ? 'Authentication failed. Check the saved API key and its permissions.'
+        : /429|quota|rate.?limit|resource.?exhausted/.test(message) ? 'The provider rate limit or free quota was reached. Try another provider later.'
+        : /404|model.*not found|unknown model/.test(message) ? 'The selected model is unavailable. Change the model setting or choose another provider.'
+        : 'The provider did not return a usable response. Check its configuration and try again.';
+      this.store.audit({ type: 'provider_connection_test', provider, ok: false, reason: detail });
+      return { provider, model: providerModel(provider), configured: true, ok: false, detail };
+    }
+  }
   async requestFromProvider(provider, input, system) {
     const model = providerModel(provider);
     if (provider === 'ollama') {
@@ -138,8 +158,14 @@ export class OperatorEngine {
     if (!candidates.length) throw new Error('No free AI provider is configured. Start Ollama or add a free-tier API key in .env. Paid providers are disabled.');
     const failures = [];
     for (const provider of candidates) {
-      try { return await this.requestFromProvider(provider, input, system); }
-      catch (error) { failures.push(`${provider}: ${error.message}`); this.store.audit({ type: 'provider_fallback', provider, reason: String(error.message).slice(0, 300) }); }
+      try {
+        const result = await this.requestFromProvider(provider, input, system);
+        if (!result.message || (!String(result.message.content || '').trim() && !(result.calls || []).length)) throw new Error('Provider returned an empty response.');
+        return result;
+      } catch (error) {
+        failures.push(`${provider}: ${error.message}`);
+        this.store.audit({ type: 'provider_fallback', provider, reason: String(error.message).slice(0, 300) });
+      }
     }
     throw new Error(`All configured free providers failed. ${failures.join(' | ')}`);
   }
